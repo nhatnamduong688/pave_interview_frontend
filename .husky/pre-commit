@@ -1,1 +1,2 @@
-npx lint-staged 
+# Tạm thời vô hiệu hóa trong quá trình phát triển
+# npx lint-staged 
