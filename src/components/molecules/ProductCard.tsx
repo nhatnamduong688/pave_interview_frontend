@@ -83,13 +83,13 @@ export function ProductCard({
   };
 
   const getQCStatusColors = () => {
-    if (qcStatus.includes("Failed")) {
+    if (qcStatus?.includes("Failed")) {
       return { bg: "#fee2e2", text: "#b91c1c", border: "#fca5a5" }; // red
     }
-    if (qcStatus.includes("Passed")) {
+    if (qcStatus?.includes("Passed")) {
       return { bg: "#dcfce7", text: "#15803d", border: "#86efac" }; // green
     }
-    if (qcStatus.includes("Pending")) {
+    if (qcStatus?.includes("Pending")) {
       return { bg: "#fef3c7", text: "#92400e", border: "#fcd34d" }; // amber
     }
     return { bg: "#f3f4f6", text: "#4b5563", border: "#d1d5db" }; // gray
@@ -110,8 +110,8 @@ export function ProductCard({
   const getClipPathStyle = () => {
     switch (clipStyle) {
       case "notched":
-        return variant === "flat" 
-          ? "clip-path: polygon(0% 0%, 95% 0%, 100% 30%, 100% 100%, 5% 100%, 0% 70%);" 
+        return variant === "flat"
+          ? "clip-path: polygon(0% 0%, 95% 0%, 100% 30%, 100% 100%, 5% 100%, 0% 70%);"
           : "clip-path: polygon(0% 0%, 95% 0%, 100% 20%, 100% 100%, 5% 100%, 0% 80%);";
       case "slanted":
         return variant === "flat"
@@ -128,8 +128,8 @@ export function ProductCard({
   } : {};
 
   const skewFixStyle = isSkewed ? {
-    transform: `skew(${skewAngle.startsWith('-') ? skewAngle.substring(1) : `-${skewAngle}`})`,
-    WebkitTransform: `skew(${skewAngle.startsWith('-') ? skewAngle.substring(1) : `-${skewAngle}`})`,
+    transform: `skew(${skewAngle?.startsWith('-') ? skewAngle?.substring(1) : `-${skewAngle}`})`,
+    WebkitTransform: `skew(${skewAngle?.startsWith('-') ? skewAngle?.substring(1) : `-${skewAngle}`})`,
     display: 'block',
   } : {};
 
@@ -142,8 +142,8 @@ export function ProductCard({
           isSkewed && "overflow-hidden",
           className
         )}
-        style={{ 
-          ...props.style, 
+        style={{
+          ...props.style,
           ...(clipStyle !== "normal" && !isSkewed ? { WebkitClipPath: getClipPathStyle(), clipPath: getClipPathStyle() } : {}),
           ...skewStyle
         }}
@@ -151,7 +151,7 @@ export function ProductCard({
       >
         {/* Color strip - quay lại sử dụng Tailwind classes */}
         {colorStrip && (
-          <div 
+          <div
             className={cn(
               "absolute top-0 left-0 right-0 h-1 z-10",
               clipStyle === "normal" && !isSkewed && "rounded-t-xl",
@@ -159,14 +159,14 @@ export function ProductCard({
             )}
           ></div>
         )}
-        
+
         <div style={skewFixStyle}>
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-xl font-medium text-gray-800 font-mono">
               {productId}
             </h3>
             <div className="flex gap-1 ml-1">
-              {tags.map((tag, index) => (
+              {tags?.map((tag, index) => (
                 <span
                   key={index}
                   style={{
@@ -218,7 +218,7 @@ export function ProductCard({
           </div>
 
           {isExpandable && (
-            <div 
+            <div
               className={cn(
                 "overflow-hidden transition-all duration-200 ease-in-out",
                 isExpanded ? "max-h-60 opacity-100 mt-2" : "max-h-0 opacity-0"
@@ -273,8 +273,8 @@ export function ProductCard({
         isSkewed && "overflow-hidden",
         className
       )}
-      style={{ 
-        ...props.style, 
+      style={{
+        ...props.style,
         ...(clipStyle !== "normal" && !isSkewed ? { WebkitClipPath: getClipPathStyle(), clipPath: getClipPathStyle() } : {}),
         ...skewStyle
       }}
@@ -282,7 +282,7 @@ export function ProductCard({
     >
       {/* Color strip - quay lại sử dụng Tailwind classes */}
       {colorStrip && (
-        <div 
+        <div
           className={cn(
             "absolute top-0 left-0 right-0 h-1 z-10",
             clipStyle === "normal" && !isSkewed && "rounded-t-[24px]",
@@ -298,11 +298,11 @@ export function ProductCard({
               <img src={productImage} alt={productId} className="h-full w-full object-cover" />
             </div>
           )}
-          
+
           <h3 className="text-2xl tracking-wide font-medium text-gray-800 leading-none">
             {productId}
           </h3>
-          {tags.map((tag, index) => (
+          {tags?.map((tag, index) => (
             <span
               key={index}
               style={{
@@ -346,7 +346,7 @@ export function ProductCard({
               <span className="ml-1 font-normal">{qcTimestamp}</span>
             )}
           </span>
-          
+
           {isExpandable && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
@@ -373,7 +373,7 @@ export function ProductCard({
           )}
         </div>
 
-        <div 
+        <div
           className={cn(
             "overflow-hidden transition-all duration-300 ease-in-out",
             isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
@@ -415,4 +415,4 @@ export function ProductCard({
       </div>
     </div>
   );
-} 
+}
