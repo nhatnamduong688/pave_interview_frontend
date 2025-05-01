@@ -29,19 +29,19 @@ const skewMap: Record<SkewDegree, number> = {
 
 const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps>(
   ({
-    className,
-    icon,
-    skewDegree = 'medium',
-    backgroundColor = "white",
-    hoverColor,
-    direction = 'left',
-    hoverEffect = 'color',
-    iconColor = '#9CA3AF',
-    bottomCurve = true,
-    gridBackground = false,
-    isPanel = false,
-    ...props
-  }, ref) => {
+     className,
+     icon,
+     skewDegree = 'medium',
+     backgroundColor = "white",
+     hoverColor,
+     direction = 'left',
+     hoverEffect = 'color',
+     iconColor = '#9CA3AF',
+     bottomCurve = true,
+     gridBackground = false,
+     isPanel = false,
+     ...props
+   }, ref) => {
     const skewDegreeValue = skewMap[skewDegree];
     const [isHovering, setIsHovering] = React.useState<boolean>(false);
 
@@ -50,7 +50,7 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
       // Custom icon with the left-facing arrow as in Figma
       const defaultIcon = (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 8L10 12L14 16" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M14 8L10 12L14 16" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       );
 
@@ -69,7 +69,7 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
           {...props}
         >
           {/* Rectangle base */}
-          <div className="w-[32px] h-[55px] bg-white" style={{ transform: 'matrix(1, 0, 0, -1, 0, 0)' }}></div>
+          <div className="w-[32px] h-[55px] bg-white" style={{transform: 'matrix(1, 0, 0, -1, 0, 0)'}}></div>
 
           {/* Icon wrapper */}
           <div className="flex flex-col justify-center items-center p-0 pr-5 w-[40px] h-[55px] bg-white">
@@ -99,7 +99,13 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
       const baseStyles: React.CSSProperties = {
         width: "100%",
         height: "100%",
-        borderRadius: "12px",
+        // borderRadius: "12px",
+        // borderRadius: bottomCurve ? "0 0 12px 12px" : "0px",
+        // borderRadius: bottomCurve ? "0 0 6px 0" : "0px",
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: bottomCurve ? "6px" : "0px",
+        borderBottomLeftRadius: 0,
         backgroundColor: isHovering && hoverColor && hoverEffect !== 'none' ? hoverColor : backgroundColor,
         clipPath,
         boxShadow: bottomCurve ? '0 5px 10px -3px rgba(0, 0, 0, 0.1)' : 'none',
@@ -110,29 +116,29 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
       };
 
       // Add additional hover effects
-      if (isHovering) {
-        switch(hoverEffect) {
-          case 'pulse':
-            return {
-              ...baseStyles,
-              boxShadow: bottomCurve ? '0 0 0 rgba(66, 153, 225, 0.5)' : 'none',
-              animation: 'pulse 1.5s infinite'
-            };
-          case 'grow':
-            return {
-              ...baseStyles,
-              transform: 'scale(1.05)',
-              transition: 'all 0.3s ease'
-            };
-          case 'shadow':
-            return {
-              ...baseStyles,
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-            };
-          default:
-            return baseStyles;
-        }
-      }
+      // if (isHovering) {
+      //   switch(hoverEffect) {
+      //     case 'pulse':
+      //       return {
+      //         ...baseStyles,
+      //         boxShadow: bottomCurve ? '0 0 0 rgba(66, 153, 225, 0.5)' : 'none',
+      //         animation: 'pulse 1.5s infinite'
+      //       };
+      //     case 'grow':
+      //       return {
+      //         ...baseStyles,
+      //         transform: 'scale(1.05)',
+      //         transition: 'all 0.3s ease'
+      //       };
+      //     case 'shadow':
+      //       return {
+      //         ...baseStyles,
+      //         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+      //       };
+      //     default:
+      //       return baseStyles;
+      //   }
+      // }
 
       return baseStyles;
     };
@@ -140,8 +146,8 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
     // Custom icon with the left-facing arrow
     const defaultIcon = (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="2" width="20" height="20" rx="4" stroke={iconColor} strokeWidth="2" />
-        <path d="M14 8L10 12L14 16" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="2" y="2" width="20" height="20" rx="4" stroke={iconColor} strokeWidth="2"/>
+        <path d="M14 8L10 12L14 16" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     );
 
@@ -174,8 +180,8 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
               }
             }
           `
-        }} />
-        <div className="absolute inset-0 transition-all duration-200" style={getHoverStyles()} />
+        }}/>
+        <div className="absolute inset-0 transition-all duration-200" style={getHoverStyles()}/>
         <span className="relative z-10 flex items-center justify-center">
           {icon || defaultIcon}
         </span>
@@ -186,4 +192,4 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
 
 TrapezoidButton.displayName = "TrapezoidButton";
 
-export { TrapezoidButton };
+export {TrapezoidButton};
