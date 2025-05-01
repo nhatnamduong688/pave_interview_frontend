@@ -10,40 +10,61 @@ interface SessionTagProps {
   variant?: "elevated" | "flat";
 }
 
-export function SessionTag({ tag, variant = "elevated" }: SessionTagProps) {
+export function SessionTag({tag, variant = "elevated"}: SessionTagProps) {
   const getTagBgColor = (type: Tag["type"]) => {
     switch (type) {
-      case "yellow": return "#fef3c7"; // amber-100
-      case "blue": return "#dbeafe"; // blue-100
-      case "green": return "#dcfce7"; // green-100
-      case "red": return "#fee2e2"; // red-100
-      case "purple": return "#f3e8ff"; // purple-100
-      case "gray": return "#f3f4f6"; // gray-100
-      default: return "#f3f4f6"; // gray-100
+      case "yellow":
+        return "#fef3c7"; // amber-100
+      case "blue":
+        return "#dbeafe"; // blue-100
+      case "green":
+        return "#dcfce7"; // green-100
+      case "red":
+        return "#fee2e2"; // red-100
+      case "purple":
+        return "#f3e8ff"; // purple-100
+      case "gray":
+        return "#f3f4f6"; // gray-100
+      default:
+        return "#f3f4f6"; // gray-100
     }
   };
 
   const getTagTextColor = (type: Tag["type"]) => {
     switch (type) {
-      case "yellow": return "#78350f"; // amber-900
-      case "blue": return "#1e3a8a"; // blue-900
-      case "green": return "#166534"; // green-900
-      case "red": return "#991b1b"; // red-900
-      case "purple": return "#581c87"; // purple-900
-      case "gray": return "#1f2937"; // gray-800
-      default: return "#1f2937"; // gray-800
+      case "yellow":
+        return "#78350f"; // amber-900
+      case "blue":
+        return "#1e3a8a"; // blue-900
+      case "green":
+        return "#166534"; // green-900
+      case "red":
+        return "#991b1b"; // red-900
+      case "purple":
+        return "#581c87"; // purple-900
+      case "gray":
+        return "#1f2937"; // gray-800
+      default:
+        return "#1f2937"; // gray-800
     }
   };
 
   const getTagBorderColor = (type: Tag["type"]) => {
     switch (type) {
-      case "yellow": return "#fcd34d"; // amber-300
-      case "blue": return "#93c5fd"; // blue-300
-      case "green": return "#86efac"; // green-300
-      case "red": return "#fca5a5"; // red-300
-      case "purple": return "#d8b4fe"; // purple-300
-      case "gray": return "#d1d5db"; // gray-300
-      default: return "#d1d5db"; // gray-300
+      case "yellow":
+        return "#fcd34d"; // amber-300
+      case "blue":
+        return "#93c5fd"; // blue-300
+      case "green":
+        return "#86efac"; // green-300
+      case "red":
+        return "#fca5a5"; // red-300
+      case "purple":
+        return "#d8b4fe"; // purple-300
+      case "gray":
+        return "#d1d5db"; // gray-300
+      default:
+        return "#d1d5db"; // gray-300
     }
   };
 
@@ -88,4 +109,4 @@ export function SessionTag({ tag, variant = "elevated" }: SessionTagProps) {
       {tag.text}
     </span>
   );
-} 
+}

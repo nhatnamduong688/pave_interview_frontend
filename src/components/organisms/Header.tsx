@@ -1,10 +1,12 @@
-import { Layout } from 'antd';
-import { BackButton } from "../atoms/BackButton";
-import { CollapseToggleButton } from "../atoms/CollapseToggleButton";
-import { SessionCard } from "../molecules/SessionCard";
+import {Layout} from 'antd';
+import {BackButton} from "../atoms/BackButton";
+import {CollapseToggleButton} from "../atoms/CollapseToggleButton";
+import {SessionCard} from "../molecules/SessionCard";
+import {SessionCardSVG} from "../molecules/SessionCard/SessionCardSVG";
 import React from "react";
+import {ProductCard} from "../molecules/ProductCard";
 
-const { Header: AntHeader } = Layout;
+const {Header: AntHeader} = Layout;
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -14,11 +16,11 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  onMenuClick,
-  timestamp = "QC Passed: 2 days ago",
-  elapsedTime,
-  onReport,
-}) => {
+                                         onMenuClick,
+                                         timestamp = "QC Passed: 2 days ago, 3:03:58 PM",
+                                         elapsedTime,
+                                         onReport,
+                                       }) => {
   return (
     <AntHeader className="px-4 bg-gray-100 shadow-sm flex items-center justify-between w-full h-16">
       {/* Left side - Logo and menu */}
@@ -44,33 +46,36 @@ const Header: React.FC<HeaderProps> = ({
             onClick={onReport || (() => console.log('Report button clicked'))}
           />
 
-          {/* SessionCard với thiết kế theo figma */}
-          <div
-            className="flex flex-row items-center ml-4 order-1 flex-none"
-            style={{
-              width: "276px",
-              height: "56px",
-              padding: "0px"
-            }}
-          >
-            <SessionCard
+          {/* SessionCard với thiết kế từ Figma */}
+          <div className="ml-4">
+            <SessionCardSVG
               sessionId="TOA-8GASMDUDFT"
               tags={[
-                { text: "AMZ", type: "yellow" },
-                { text: "P1", type: "blue" }
+                {text: "AMZ", type: "yellow"},
+                {text: "P1", type: "blue"}
               ]}
               qcStatus="QC Passed:"
               qcTimestamp={timestamp.includes("QC Passed:") ? timestamp.replace("QC Passed:", "") : timestamp}
-              isSkewed={true}
-              skewAngle="-20deg"
-              variant="flat"
-              colorStrip="blue"
-              className="w-full h-full"
+              isExpandable={true}
             />
           </div>
+
+
+          {/*<ProductCard*/}
+          {/*  productId="TOA-86ASMDUDFT"*/}
+          {/*  tags={[*/}
+          {/*    { text: "AMZ", type: "yellow" },*/}
+          {/*    { text: "P1", type: "blue" }*/}
+          {/*  ]}*/}
+          {/*  qcStatus="QC Passed:"*/}
+          {/*  qcTimestamp="2 days ago, 3:03:58 PM"*/}
+          {/*  variant="elevated" // Thay đổi variant từ "flat" sang "elevated"*/}
+          {/*  colorStrip="blue" // Thêm colorStrip nếu muốn có viền màu ở trên cùng*/}
+          {/*/>*/}
+
         </div>
       </div>
-      
+
       {/* Right side - Elapsed time */}
       {elapsedTime && (
         <div className="flex items-center">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Layout, Card, Typography, Space, message, Divider } from 'antd';
+import { Layout, Card, Typography, Space, message, Divider, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import Header from '../organisms/Header';
 import { SessionCard } from '../molecules/SessionCard';
 
@@ -24,7 +25,7 @@ const HeaderDemoPage: React.FC = () => {
       {contextHolder}
       <Header
         onMenuClick={handleMenuClick}
-        timestamp="QC Passed: 2 days ago, 3:03:58 PM"
+        timestamp="2 days ago, 3:03:58 PM"
         elapsedTime="32s"
         onReport={handleReport}
       />
@@ -32,91 +33,119 @@ const HeaderDemoPage: React.FC = () => {
       <Content className="p-6">
         <Title level={2}>Header with SessionCard Demo</Title>
         <Paragraph>
-          This page demonstrates the Header component with SessionCard integration.
+          This page demonstrates the Header component with SessionCard integration using Figma design specifications.
         </Paragraph>
 
         <div className="mt-6">
           <Card title="Component Features" className="w-full mb-6">
             <Space direction="vertical" className="w-full">
               <Paragraph>
-                <strong>Simple Design:</strong> The header spans 100% width with components aligned to the left and status elements on the right.
+                <strong>Pixel-Perfect Design:</strong> The header now uses a SessionCard with an SVG-based layout matching the Figma design.
               </Paragraph>
 
               <Paragraph>
-                <strong>SessionCard Integration:</strong> We use the modular SessionCard component that follows the Figma design specifications.
-              </Paragraph>
-
-              <Paragraph>
-                <strong>Status Badges:</strong> AMZ and P1 badges provide quick status information with customizable colors.
+                <strong>"Created Date" Styling:</strong> The timestamp uses JetBrains Mono font at 10px size with proper opacity.
               </Paragraph>
 
               <div className="mt-4 p-4 bg-gray-50 rounded">
-                <Title level={5}>Features:</Title>
+                <Title level={5}>Design Details:</Title>
                 <ul className="list-disc pl-5">
-                  <li>Full-width header with justified component structure</li>
-                  <li>Menu icon for mobile navigation</li>
-                  <li>SessionCard with skewed design showing session ID "TOA-8GASMDUDFT"</li>
-                  <li>Figma-styled text with Proto Mono font, 15px size, and proper letter spacing</li>
-                  <li>AMZ and P1 status badges sized at 18px × 13px</li>
-                  <li>Blue color strip at the top of the session card</li>
-                  <li>Timestamp display in the card</li>
-                  <li>Elapsed time indicator (32s) on the right</li>
+                  <li>Skewed card edges to create the trapezoid shape</li>
+                  <li>Shadow under the card using SVG filters</li>
+                  <li>Proto Mono font (15px) for the session ID</li>
+                  <li>JetBrains Mono font (10px) for the timestamp</li>
+                  <li>Custom dropdown indicator</li>
+                  <li>Exact tag dimensions (18px × 13px)</li>
                 </ul>
               </div>
             </Space>
           </Card>
           
-          <Card title="SessionCard Variations" className="w-full">
-            <Paragraph>
-              Below are some variations of the SessionCard component with different styling options:
-            </Paragraph>
-            
+          <Card title="SessionCard Design Comparison" className="w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+              <div>
+                <Title level={5}>Figma Design (SVG-based)</Title>
+                <div className="p-4 border border-gray-200 rounded-lg">
+                  <SessionCard
+                    sessionId="TOA-8GASMDUDFT"
+                    tags={[
+                      { text: "AMZ", type: "yellow" },
+                      { text: "P1", type: "blue" }
+                    ]}
+                    qcStatus="Created Date:"
+                    qcTimestamp="2 days ago, 3:03:58 PM"
+                    isExpandable={true}
+                    specialDesign={true}
+                  />
+                </div>
+                <Paragraph className="mt-2 text-sm text-gray-500">
+                  Uses SVG shape with exact dimensions from Figma, including skewed edges, proper font specifications, and shadow effects.
+                </Paragraph>
+              </div>
+              
+              <div>
+                <Title level={5}>Regular Card Implementation</Title>
+                <div className="p-4 border border-gray-200 rounded-lg">
+                  <SessionCard
+                    sessionId="TOA-8GASMDUDFT"
+                    tags={[
+                      { text: "AMZ", type: "yellow" },
+                      { text: "P1", type: "blue" }
+                    ]}
+                    qcStatus="Created Date:"
+                    qcTimestamp="2 days ago, 3:03:58 PM"
+                    isSkewed={true}
+                    skewAngle="-20deg"
+                    variant="flat"
+                    colorStrip="blue"
+                    className="w-[276px]"
+                  />
+                </div>
+                <Paragraph className="mt-2 text-sm text-gray-500">
+                  Uses CSS transform for skewing and standard styling approach with Tailwind classes.
+                </Paragraph>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <Link to="/session-card-demo">
+                <Button type="primary" size="large">
+                  View More SessionCard Variations
+                </Button>
+              </Link>
+            </div>
+          </Card>
+          
+          <div className="mt-6">
+            <Title level={4}>Other SessionCard Variations</Title>
             <div className="flex flex-wrap gap-5 mt-4">
-              {/* Flat style (như trong header) */}
               <div className="w-80">
-                <Title level={5}>Flat Style (with skew)</Title>
+                <Title level={5}>Special Design (No Tags)</Title>
                 <SessionCard
                   sessionId="SESSION-001"
-                  tags={[{ text: "TEST", type: "red" }]}
-                  qcStatus="QC Passed:"
-                  qcTimestamp=" 1 day ago"
-                  variant="flat"
-                  isSkewed={true}
-                  colorStrip="red"
+                  qcStatus="Created Date:"
+                  qcTimestamp="1 day ago"
+                  isExpandable={true}
+                  specialDesign={true}
                 />
               </div>
               
-              {/* Elevated style */}
               <div className="w-80">
-                <Title level={5}>Elevated Style</Title>
+                <Title level={5}>Elevated Style with Created Date</Title>
                 <SessionCard
                   sessionId="SESSION-002"
                   tags={[
                     { text: "VIP", type: "purple" },
                     { text: "NEW", type: "green" }
                   ]}
-                  qcStatus="QC Pending:"
-                  qcTimestamp=" Just now"
+                  qcStatus="Created Date:"
+                  qcTimestamp="Just now"
                   variant="elevated"
                   colorStrip="green"
                 />
               </div>
-              
-              {/* Notched style */}
-              <div className="w-80">
-                <Title level={5}>Notched Style</Title>
-                <SessionCard
-                  sessionId="SESSION-003"
-                  tags={[{ text: "OLD", type: "gray" }]}
-                  qcStatus="QC Failed:"
-                  qcTimestamp=" 3 days ago"
-                  variant="elevated"
-                  clipStyle="notched"
-                  colorStrip="yellow"
-                />
-              </div>
             </div>
-          </Card>
+          </div>
         </div>
       </Content>
     </Layout>

@@ -7,6 +7,7 @@ import ProductCardDemoPage from './components/pages/ProductCardDemoPage'
 import ProductCardSimpleDemo from './components/pages/ProductCardSimpleDemo'
 import SimpleCardDemo from './components/pages/SimpleCardDemo'
 import ProductCardDemo from './components/pages/ProductCardDemo'
+import SessionCardDemo from './components/pages/SessionCardDemo'
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/product-card-simple" element={<ProductCardSimpleDemo />} />
           <Route path="/simple-card" element={<SimpleCardDemo />} />
           <Route path="/product-card-demo" element={<ProductCardDemo />} />
+          <Route path="/session-card-demo" element={<SessionCardDemo />} />
           <Route path="/" element={<Navigate to="/header" replace />} />
         </Routes>
       </BrowserRouter>

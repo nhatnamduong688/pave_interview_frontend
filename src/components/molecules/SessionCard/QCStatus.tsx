@@ -3,9 +3,10 @@ import * as React from 'react';
 interface QCStatusProps {
   status: string;
   timestamp?: string;
+  useCreatedDateStyle?: boolean;
 }
 
-export function QCStatus({ status, timestamp }: QCStatusProps) {
+export function QCStatus({ status, timestamp, useCreatedDateStyle = false }: QCStatusProps) {
   const getQCStatusColors = () => {
     if (status?.includes("Failed")) {
       return { bg: "#fee2e2", text: "#b91c1c", border: "#fca5a5" }; // red
@@ -21,6 +22,32 @@ export function QCStatus({ status, timestamp }: QCStatusProps) {
 
   const colors = getQCStatusColors();
 
+  // Created Date style từ Figma
+  const createdDateStyle = {
+    width: '198px',
+    height: '13px',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: '10px',
+    lineHeight: '125%',
+    color: 'rgba(31, 41, 55, 0.38)',
+    flex: 'none',
+    order: 0,
+    flexGrow: 0,
+  };
+
+  // Nếu sử dụng style cho Created Date
+  if (useCreatedDateStyle || status?.includes("Created Date")) {
+    return (
+      <span style={createdDateStyle}>
+        {status}
+        {timestamp && ` ${timestamp}`}
+      </span>
+    );
+  }
+
+  // Style mặc định hiện tại
   return (
     <span
       style={{
@@ -39,4 +66,4 @@ export function QCStatus({ status, timestamp }: QCStatusProps) {
       )}
     </span>
   );
-} 
+}
