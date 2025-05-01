@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+coverage
+.yarn
+.vscode
+.idea
+*.d.ts
+vite.config.ts
+*.config.js
+tsconfig.node.json 

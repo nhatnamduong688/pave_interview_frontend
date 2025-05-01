@@ -1,12 +1,12 @@
 import React from 'react'
 import { ConfigProvider } from 'antd'
-import HomePage from './components/pages/HomePage'
+import ButtonDemoPage from './components/pages/ButtonDemoPage'
 import './App.css'
 
 function App() {
   return (
     <ConfigProvider>
-      <HomePage />
+      <ButtonDemoPage />
     </ConfigProvider>
   )
 }
