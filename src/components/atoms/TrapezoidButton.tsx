@@ -4,6 +4,7 @@ import {cn} from "../../lib/utils";
 type SkewDegree = 'low' | 'medium' | 'high' | 'extreme';
 type Direction = 'left' | 'right';
 type HoverEffect = 'color' | 'pulse' | 'grow' | 'shadow' | 'none';
+type CornerStyle = 'none' | 'rounded' | 'cut';
 
 interface TrapezoidButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,6 +15,7 @@ interface TrapezoidButtonProps
   direction?: Direction;
   hoverEffect?: HoverEffect;
   iconColor?: string;
+  bottomCornerStyle?: CornerStyle; // Kiểu bo góc dưới: none, rounded hoặc cut
   bottomCurve?: boolean;
   gridBackground?: boolean;
   isPanel?: boolean; // Xác định nếu đây là panel trigger
@@ -37,6 +39,7 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
      direction = 'left',
      hoverEffect = 'color',
      iconColor = '#9CA3AF',
+     bottomCornerStyle = 'rounded',
      bottomCurve = true,
      gridBackground = false,
      isPanel = false,
@@ -88,23 +91,32 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
       // Tính toán các điểm nghiêng dựa trên mức độ skew
       const rightTopSkew = 100 - skewDegreeValue;
 
+      // Bo góc phía dưới bên phải theo kiểu được chọn
       if (direction === 'left') {
-        // Left-side angled clip path with right-side slope
-        clipPath = `polygon(0% 0%, 100% 0%, ${rightTopSkew}% 100%, 0% 100%)`;
+        if (bottomCornerStyle === 'cut') {
+          // Cắt góc dưới phải
+          clipPath = `polygon(0% 0%, 100% 0%, ${rightTopSkew - 5}% 95%, ${rightTopSkew}% 100%, 0% 100%)`;
+        } else {
+          // Mặc định hoặc bo tròn (sẽ áp dụng border-radius riêng)
+          clipPath = `polygon(0% 0%, 100% 0%, ${rightTopSkew}% 100%, 0% 100%)`;
+        }
       } else {
-        // Right-side angled clip path
-        clipPath = `polygon(0% 0%, 100% 0%, 100% 100%, ${skewDegreeValue}% 100%)`;
+        if (bottomCornerStyle === 'cut') {
+          // Cắt góc dưới phải (với direction='right')
+          clipPath = `polygon(0% 0%, 100% 0%, 100% 95%, 95% 100%, ${skewDegreeValue}% 100%)`;
+        } else {
+          // Mặc định hoặc bo tròn (sẽ áp dụng border-radius riêng)
+          clipPath = `polygon(0% 0%, 100% 0%, 100% 100%, ${skewDegreeValue}% 100%)`;
+        }
       }
 
       const baseStyles: React.CSSProperties = {
         width: "100%",
         height: "100%",
-        // borderRadius: "12px",
-        // borderRadius: bottomCurve ? "0 0 12px 12px" : "0px",
-        // borderRadius: bottomCurve ? "0 0 6px 0" : "0px",
+        // Áp dụng bo tròn cho góc dưới bên phải nếu là kiểu 'rounded'
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        borderBottomRightRadius: bottomCurve ? "6px" : "0px",
+        borderBottomRightRadius: bottomCornerStyle === 'rounded' ? "6px" : "0px",
         borderBottomLeftRadius: 0,
         backgroundColor: isHovering && hoverColor && hoverEffect !== 'none' ? hoverColor : backgroundColor,
         clipPath,

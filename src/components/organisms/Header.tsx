@@ -2,6 +2,7 @@ import { Layout, Typography, Tag, Button } from 'antd';
 import { MenuOutlined, ClockCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import {TrapezoidButton} from "../atoms/TrapezoidButton";
+import {FigmaButton} from "../atoms/FigmaButton";
 
 const { Header: AntHeader } = Layout;
 const { Title, Text } = Typography;
@@ -24,62 +25,63 @@ const Header: React.FC<HeaderProps> = ({
       {/* Left side - Logo and menu */}
       <div className="flex items-center">
 
-        {/*<MenuOutlined*/}
-        {/*  className="mr-6 text-lg cursor-pointer"*/}
-        {/*  onClick={onMenuClick}*/}
-        {/*/>*/}
-
-        {/*<Link to="/">*/}
-        {/*  <Title level={4} className="m-0">*/}
-        {/*    PAVE*/}
-        {/*  </Title>*/}
-        {/*</Link>*/}
-
         <div className="flex items-center">
+          {/* FigmaButton chính với mã sản phẩm và badge */}
+          {/*<FigmaButton*/}
+          {/*  variant="primary"*/}
+          {/*  productCode="TOA-86ASMDUDF"*/}
+          {/*  badgeText="AMZ"*/}
+          {/*  badgeColor="#f59e0b"*/}
+          {/*  onClick={() => console.log('Product button clicked')}*/}
+          {/*  className="mr-6"*/}
+          {/*/>*/}
 
-          {/*<TrapezoidButton*/}
-          {/*  type="primary"*/}
-          {/*  className="ml-6"*/}
-          {/*  skewDegree={10}*/}
-          {/*>*/}
-          {/*  TOA-86ASMDUDF*/}
-          {/*</TrapezoidButton>*/}
+          {/* FigmaButton với badge P1 */}
+          {/*<FigmaButton*/}
+          {/*  variant="default"*/}
+          {/*  badgeText="P1"*/}
+          {/*  badgeColor="#3b82f6"*/}
+          {/*  onClick={() => console.log('P1 badge button clicked')}*/}
+          {/*  className="mr-6"*/}
+          {/*/>*/}
 
-          <TrapezoidButton
-            skewDegree="medium"      // góc nghiêng ~25%
-            direction="left"         // mặt cắt phía bên phải
-            backgroundColor="#fff"   // nền trắng
-            hoverEffect="none"       // tắt các hiệu ứng phụ khi hover
-            iconColor="#9ca3af"
-            bottomCurve={true}       // bật “bo” bóng chân
-            gridBackground={false}
-            className="w-[100px] h-[55px]" // điều chỉnh kích thước cho giống
-          />
+          {/* FigmaButton ở các vị trí khác có thể ẩn trong điện thoại */}
+          {/*<div className="hidden md:flex items-center">*/}
+            <FigmaButton
+              variant="secondary"
+              onClick={() => console.log('Additional button clicked')}
+              className="mr-4"
+            />
 
-          {/*<Tag className="ml-2 bg-yellow-500 text-white border-none">AMZ</Tag>*/}
-          {/*<Tag className="ml-2 bg-blue-500 text-white border-none">P1</Tag>*/}
+            <FigmaButton
+              fillColor="#f3f4f6"
+              onClick={() => console.log('Last button clicked')}
+              className="mr-4"
+              shadowEnabled={false}
+            />
+          {/*</div>*/}
         </div>
       </div>
 
       {/* Right side - Actions and Timestamp */}
-      <div className="flex items-center space-x-4">
-        <Text className="text-gray-500 flex items-center">
-          <ClockCircleOutlined className="mr-2" />
-          {timestamp}
-        </Text>
+      {/*<div className="flex items-center space-x-4">*/}
+      {/*  <Text className="text-gray-500 flex items-center">*/}
+      {/*    <ClockCircleOutlined className="mr-2" />*/}
+      {/*    {timestamp}*/}
+      {/*  </Text>*/}
 
-        <Button
-          icon={<WarningOutlined />}
-          className="flex items-center border rounded-full"
-          onClick={onReport}
-        >
-          Report
-        </Button>
+      {/*  <Button*/}
+      {/*    icon={<WarningOutlined />}*/}
+      {/*    className="flex items-center border rounded-full"*/}
+      {/*    onClick={onReport}*/}
+      {/*  >*/}
+      {/*    Report*/}
+      {/*  </Button>*/}
 
-        <Tag className="rounded-full bg-green-100 text-green-800 border-green-200">
-          {elapsedTime}
-        </Tag>
-      </div>
+      {/*  <Tag className="rounded-full bg-green-100 text-green-800 border-green-200">*/}
+      {/*    {elapsedTime}*/}
+      {/*  </Tag>*/}
+      {/*</div>*/}
     </AntHeader>
   );
 };
