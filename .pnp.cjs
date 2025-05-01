@@ -44,6 +44,7 @@ const RAW_RUNTIME_STATE =
           ["lint-staged", "npm:15.5.1"],\
           ["pave_interview_frontend", "workspace:."],\
           ["postcss", "npm:8.5.3"],\
+          ["prettier", "npm:3.5.3"],\
           ["react", "npm:19.1.0"],\
           ["react-dom", "virtual:9a3439677d3ce54b3b82dd361cf2787ae80347a9686736b29263982d6af7c4778a7d92a24aa29888e4d65842ce8f5e396ce59f2db5dbe764efe4d0776655d8e3#npm:19.1.0"],\
           ["tailwindcss", "npm:4.1.5"],\
@@ -4078,6 +4079,7 @@ const RAW_RUNTIME_STATE =
           ["lint-staged", "npm:15.5.1"],\
           ["pave_interview_frontend", "workspace:."],\
           ["postcss", "npm:8.5.3"],\
+          ["prettier", "npm:3.5.3"],\
           ["react", "npm:19.1.0"],\
           ["react-dom", "virtual:9a3439677d3ce54b3b82dd361cf2787ae80347a9686736b29263982d6af7c4778a7d92a24aa29888e4d65842ce8f5e396ce59f2db5dbe764efe4d0776655d8e3#npm:19.1.0"],\
           ["tailwindcss", "npm:4.1.5"],\
@@ -4148,6 +4150,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/prelude-ls-npm-1.2.1-3e4d272a55-10c0.zip/node_modules/prelude-ls/",\
         "packageDependencies": [\
           ["prelude-ls", "npm:1.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["prettier", [\
+      ["npm:3.5.3", {\
+        "packageLocation": "./.yarn/unplugged/prettier-npm-3.5.3-787132ce04/node_modules/prettier/",\
+        "packageDependencies": [\
+          ["prettier", "npm:3.5.3"]\
         ],\
         "linkType": "HARD"\
       }]\
