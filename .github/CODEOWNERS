@@ -1,0 +1,21 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# they will be requested for review when someone opens a pull request.
+* @duongnhatnam
+
+# Order is important; the last matching pattern takes the most
+# precedence.
+
+# Core components
+/src/components/atoms/ @duongnhatnam
+/src/components/molecules/ @duongnhatnam
+/src/components/organisms/ @duongnhatnam
+
+# Business logic
+/src/hooks/ @duongnhatnam
+/src/contexts/ @duongnhatnam
+/src/services/ @duongnhatnam
+
+# Configuration files
+*.config.js @duongnhatnam
+package.json @duongnhatnam 
