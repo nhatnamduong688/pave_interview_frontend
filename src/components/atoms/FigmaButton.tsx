@@ -1,22 +1,24 @@
 import * as React from 'react';
 
-interface FigmaButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface BackButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary' | 'secondary';
   iconColor?: string;
   fillColor?: string;
+  hoverColor?: string;
   shadowEnabled?: boolean;
   productCode?: string;
   badgeText?: string;
   badgeColor?: string;
 }
 
-export const FigmaButton = React.forwardRef<HTMLButtonElement, FigmaButtonProps>(
+export const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(
   ({ 
     className, 
     onClick, 
     variant = 'default',
     iconColor = '#9CA3AF',
     fillColor = 'white',
+    hoverColor,
     shadowEnabled = true,
     productCode,
     badgeText,
@@ -40,7 +42,7 @@ export const FigmaButton = React.forwardRef<HTMLButtonElement, FigmaButtonProps>
         <button
           ref={ref}
           onClick={onClick}
-          className={className}
+          className={`focus:outline-none ${className || ''}`}
           style={{
             padding: 0,
             border: 0,
@@ -150,4 +152,4 @@ export const FigmaButton = React.forwardRef<HTMLButtonElement, FigmaButtonProps>
   }
 );
 
-FigmaButton.displayName = 'FigmaButton'; 
+BackButton.displayName = 'BackButton'; 

@@ -3,18 +3,20 @@ import { Typography, Divider, Row, Col, Card, Space } from 'antd';
 import { HomeOutlined, SettingOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import MainLayout from '../templates/MainLayout';
 import { TrapezoidButton } from '../atoms/TrapezoidButton';
+import { BackButton } from '../atoms/BackButton';
+import { CollapseToggleButton } from '../atoms/CollapseToggleButton';
 
 const { Title, Paragraph } = Typography;
 
 const ButtonDemoPage: React.FC = () => {
   return (
     <MainLayout>
-      <Title level={2}>TrapezoidButton Demo</Title>
+      <Title level={2}>Button Components Demo</Title>
       <Paragraph>
-        This demonstrates the different variations of the TrapezoidButton component.
+        This demonstrates the different button components and their variations.
       </Paragraph>
 
-      <Divider orientation="left">Direction Variants</Divider>
+      <Divider orientation="left">TrapezoidButton</Divider>
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
           <Card title="Left Direction (Default)">
@@ -38,6 +40,116 @@ const ButtonDemoPage: React.FC = () => {
         </Col>
       </Row>
       
+      <Divider orientation="left">Back Buttons</Divider>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={8}>
+          <Card title="Default BackButton">
+            <BackButton
+              onClick={() => console.log('Default button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="Primary BackButton">
+            <BackButton
+              variant="primary"
+              onClick={() => console.log('Primary button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="Secondary BackButton">
+            <BackButton
+              variant="secondary"
+              onClick={() => console.log('Secondary button clicked')}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: '20px' }}>
+        <Col xs={24} md={8}>
+          <Card title="BackButton with Product Code">
+            <BackButton
+              productCode="TOA-123"
+              onClick={() => console.log('Product code button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="BackButton with Badge">
+            <BackButton
+              badgeText="AMZ"
+              onClick={() => console.log('Badge button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="BackButton without Shadow">
+            <BackButton
+              shadowEnabled={false}
+              onClick={() => console.log('No shadow button clicked')}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Divider orientation="left">Collapse Toggle Buttons</Divider>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={8}>
+          <Card title="Default CollapseToggleButton">
+            <CollapseToggleButton
+              onClick={() => console.log('Default collapse button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="Primary CollapseToggleButton">
+            <CollapseToggleButton
+              variant="primary"
+              onClick={() => console.log('Primary collapse button clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="Secondary CollapseToggleButton">
+            <CollapseToggleButton
+              variant="secondary"
+              onClick={() => console.log('Secondary collapse button clicked')}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: '20px' }}>
+        <Col xs={24} md={8}>
+          <Card title="CollapseToggleButton with Product Code">
+            <CollapseToggleButton
+              productCode="DOC-123"
+              onClick={() => console.log('Collapse with code clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="CollapseToggleButton with Badge">
+            <CollapseToggleButton
+              badgeText="NEW"
+              onClick={() => console.log('Collapse with badge clicked')}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} md={8}>
+          <Card title="CollapseToggleButton Custom Colors">
+            <CollapseToggleButton
+              fillColor="#e0f2fe"
+              iconColor="#0ea5e9"
+              shadowEnabled={false}
+              onClick={() => console.log('Custom collapse button clicked')}
+            />
+          </Card>
+        </Col>
+      </Row>
+
       <Divider orientation="left">Skew Degree Variants</Divider>
       <Row gutter={[24, 24]}>
         <Col xs={24} md={6}>

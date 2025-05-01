@@ -64,6 +64,7 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
             "w-[72px] h-[55px]",
             "shadow-[0px_1px_3px_-1px_rgba(0,0,0,0.12)]",
             "bg-transparent border-0",
+            "focus:outline-none",
             className
           )}
           ref={ref}
@@ -168,7 +169,7 @@ const TrapezoidButton = React.forwardRef<HTMLButtonElement, TrapezoidButtonProps
         className={cn(
           "relative flex items-center justify-center overflow-visible",
           "bg-transparent border-0 transition-all duration-200",
-          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300",
+          "focus:outline-none",
           "h-12 w-14",
           hoverEffect !== 'none' && "hover:scale-105",
           className
