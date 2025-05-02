@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-      {/* Right side - Report and Timer buttons */}
+      {/* Right side - Buttons */}
       <div className="flex items-center gap-3">
         <ReportTimer 
           variant="report" 
@@ -70,11 +70,9 @@ const Header: React.FC<HeaderProps> = ({
           label={timerValue} 
           onClick={onTimerClick || (() => console.log('Timer button clicked'))} 
         />
-        {onCollapseToggle && (
-          <CollapseToggleButton
-            onClick={onCollapseToggle}
-          />
-        )}
+        <CollapseToggleButton
+          onClick={onCollapseToggle || (() => console.log('Collapse toggle clicked'))}
+        />
       </div>
     </div>
   );

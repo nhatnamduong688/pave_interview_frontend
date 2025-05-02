@@ -38,7 +38,13 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   onReport
 }) => {
   const [activeImageId, setActiveImageId] = useState<string>(images[0]?.id || '');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const activeImage = images.find(img => img.id === activeImageId) || images[0];
+
+  const handleCollapseToggle = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+    console.log('Sidebar collapsed state:', !isSidebarCollapsed);
+  };
 
   const toolbarButtons = [
     { id: 'move', icon: '↕️', label: 'Move' },
@@ -51,13 +57,14 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Main content area (left part) */}
-      <div className="flex flex-col flex-1">
+      <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'mr-0' : 'mr-[300px]'}`}>
         {/* Header */}
         <div className="flex-none h-16 px-4 border-b border-gray-200 bg-white z-10">
           <Header 
             title={`${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`}
             onBack={onBack}
             onReport={onReport}
+            onCollapseToggle={handleCollapseToggle}
           />
         </div>
         
@@ -100,8 +107,8 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
         </div>
       </div>
       
-      {/* Sidebar Right - Full height with fixed footer */}
-      <div className="w-[300px] h-full flex flex-col border-l border-gray-200 bg-white">
+      {/* Sidebar Right - Full height with fixed footer - Position absolute to allow main content to expand */}
+      <div className={`absolute top-0 right-0 w-[300px] h-full flex flex-col border-l border-gray-200 bg-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {/* Title with view state */}
