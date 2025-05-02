@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import IndicatorMarker from '../atoms/IndicatorMarker';
 
 interface ImageViewerProps {
   src: string;
@@ -11,21 +12,32 @@ interface ImageViewerProps {
 }
 
 const ImageViewer: React.FC<ImageViewerProps> = ({ src, alt = '', indicators = [] }) => {
+  const [selectedIndicator, setSelectedIndicator] = useState<number | null>(null);
+  
+  const handleIndicatorClick = (index: number) => {
+    setSelectedIndicator(index === selectedIndicator ? null : index);
+  };
+
   return (
-    <div className="relative w-full h-full bg-gray-100 overflow-hidden">
-      <img src={src} alt={alt} className="w-full h-full object-contain" />
-      
-      {indicators.map((indicator, index) => (
-        <div 
-          key={index}
-          className="absolute w-4 h-4 bg-red-500 border-2 border-white rounded-full"
-          style={{ 
-            left: `${indicator.x}%`, 
-            top: `${indicator.y}%`,
-            backgroundColor: indicator.color || '#ef4444'
-          }}
+    <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative max-w-full max-h-full">
+        <img 
+          src={src} 
+          alt={alt} 
+          className="object-contain max-h-[calc(100vh-140px)]" 
         />
-      ))}
+        
+        {indicators?.map((indicator, index) => (
+          <IndicatorMarker
+            key={index}
+            x={indicator.x}
+            y={indicator.y}
+            color={indicator.color}
+            onClick={() => handleIndicatorClick(index)}
+            isSelected={selectedIndicator === index}
+          />
+        ))}
+      </div>
     </div>
   );
 };
