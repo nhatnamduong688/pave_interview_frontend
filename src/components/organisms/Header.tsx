@@ -14,6 +14,9 @@ interface HeaderProps {
   onReportClick?: () => void;
   onTimerClick?: () => void;
   onCollapseToggle?: () => void;
+  title?: string;
+  onBack?: () => void;
+  onReport?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -23,6 +26,9 @@ const Header: React.FC<HeaderProps> = ({
   onReportClick,
   onTimerClick,
   onCollapseToggle,
+  title,
+  onBack,
+  onReport,
 }) => {
   return (
     <div className="bg-black w-full">
@@ -31,22 +37,26 @@ const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center">
           <BackButton
             variant="secondary"
-            onClick={onMenuClick || (() => console.log('Back button clicked'))}
+            onClick={onBack || onMenuClick || (() => console.log('Back button clicked'))}
             className="mr-4"
           />
 
-          <div className="ml-2">
-            <SessionCardSVG
-              sessionId="TOA-8GASMDUDFT"
-              tags={[
-                {text: "AMZ", type: "yellow"},
-                {text: "P1", type: "blue"}
-              ]}
-              qcStatus="QC Passed:"
-              qcTimestamp={timestamp}
-              isExpandable={true}
-            />
-          </div>
+          {title ? (
+            <h1 className="text-lg font-medium ml-2">{title}</h1>
+          ) : (
+            <div className="ml-2">
+              <SessionCardSVG
+                sessionId="TOA-8GASMDUDFT"
+                tags={[
+                  {text: "ARZ", type: "yellow"},
+                  {text: "P1", type: "blue"}
+                ]}
+                qcStatus="QC Passed:"
+                qcTimestamp={timestamp}
+                isExpandable={true}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right side - Report and Timer buttons */}
@@ -54,16 +64,18 @@ const Header: React.FC<HeaderProps> = ({
           <ReportTimer 
             variant="report" 
             label="Report" 
-            onClick={onReportClick || (() => console.log('Report button clicked'))} 
+            onClick={onReport || onReportClick || (() => console.log('Report button clicked'))} 
           />
           <ReportTimer 
             variant="timer" 
             label={timerValue} 
             onClick={onTimerClick || (() => console.log('Timer button clicked'))} 
           />
-          <CollapseToggleButton
-            onClick={onCollapseToggle || (() => console.log('Collapse toggle clicked'))}
-          />
+          {onCollapseToggle && (
+            <CollapseToggleButton
+              onClick={onCollapseToggle}
+            />
+          )}
         </div>
       </AntHeader>
     </div>
