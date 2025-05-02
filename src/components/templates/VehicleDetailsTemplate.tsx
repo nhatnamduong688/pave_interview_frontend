@@ -91,9 +91,9 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
         </div>
         
         {/* Center content with left sidebar and main viewer */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden pl-12">
           {/* Sidebar Left - Thumbnail List */}
-          <div className="w-16 p-2 border-r border-gray-200 overflow-y-auto bg-white">
+          <div className="w-[84px] border-r border-gray-200 bg-white mr-[12.22px] overflow-y-auto">
             <ThumbnailList
               thumbnails={images}
               activeId={activeImageId}
