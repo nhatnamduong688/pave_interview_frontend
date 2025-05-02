@@ -45,3 +45,6 @@ yarn-error.log*
 # Package locks
 package-lock.json
 yarn.lock
+
+# Project specific
+component-spec-request.md
