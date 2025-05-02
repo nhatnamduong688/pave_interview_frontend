@@ -19,12 +19,12 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ src, alt = '', indicators = [
   };
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center p-2">
       <div className="relative max-w-full max-h-full">
         <img 
           src={src} 
           alt={alt} 
-          className="object-contain max-h-[calc(100vh-140px)]" 
+          className="object-contain max-h-[calc(100vh-130px)]" 
         />
         
         {indicators?.map((indicator, index) => (

@@ -102,7 +102,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
           </div>
           
           {/* Main Viewer */}
-          <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-50">
+          <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-50 py-2">
             <ImageViewer
               src={activeImage?.src || ''}
               alt={activeImage?.alt}
