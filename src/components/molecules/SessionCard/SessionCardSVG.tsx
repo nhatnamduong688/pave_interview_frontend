@@ -103,9 +103,9 @@ export function SessionCardSVG({
           }}>
             {qcStatus}
             {qcTimestamp && (
-              <span style={{ 
+              <span style={{
                 fontWeight: 700,
-                color: 'rgba(31, 41, 55, 0.55)' 
+                color: 'rgba(31, 41, 55, 0.55)'
               }}>
                 {` ${qcTimestamp}`}
               </span>
@@ -117,11 +117,11 @@ export function SessionCardSVG({
               className="cursor-pointer ml-3"
               onClick={() => setIsExpanded(!isExpanded)}
             >
-              <svg 
-                width="10" 
-                height="11" 
-                viewBox="0 0 10 11" 
-                fill="none" 
+              <svg
+                width="10"
+                height="11"
+                viewBox="0 0 10 11"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{
                   transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -143,6 +143,7 @@ export function SessionCardSVG({
             </div>
           </div>
         )} */}
+
       </div>
     </div>
   );

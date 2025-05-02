@@ -9,6 +9,7 @@ import SimpleCardDemo from './components/pages/SimpleCardDemo'
 import ProductCardDemo from './components/pages/ProductCardDemo'
 import SessionCardDemo from './components/pages/SessionCardDemo'
 import ReportTimerDemoPage from './components/pages/ReportTimerDemoPage'
+import HomePage from './components/pages/HomePage'
 import './App.css'
 
 function App() {
@@ -24,7 +25,8 @@ function App() {
           <Route path="/product-card-demo" element={<ProductCardDemo />} />
           <Route path="/session-card-demo" element={<SessionCardDemo />} />
           <Route path="/report-timer-demo" element={<ReportTimerDemoPage />} />
-          <Route path="/" element={<Navigate to="/header" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>

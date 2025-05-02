@@ -1,53 +1,41 @@
 import {Layout} from 'antd';
 import {BackButton} from "../atoms/BackButton";
-import {CollapseToggleButton} from "../atoms/CollapseToggleButton";
-import {SessionCard} from "../molecules/SessionCard";
 import {SessionCardSVG} from "../molecules/SessionCard/SessionCardSVG";
+import ReportTimer from "../atoms/ReportTimer";
 import React from "react";
-import {ProductCard} from "../molecules/ProductCard";
+import { CollapseToggleButton } from "../atoms/CollapseToggleButton";
 
 const {Header: AntHeader} = Layout;
 
 interface HeaderProps {
   onMenuClick?: () => void;
   timestamp?: string;
-  elapsedTime?: string;
-  onReport?: () => void;
+  timerValue?: string;
+  onReportClick?: () => void;
+  onTimerClick?: () => void;
+  onCollapseToggle?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
-                                         onMenuClick,
-                                         timestamp = "QC Passed: 2 days ago, 3:03:58 PM",
-                                         elapsedTime,
-                                         onReport,
-                                       }) => {
+  onMenuClick,
+  timestamp = "2 days ago, 3:03:58 PM",
+  timerValue = "32s",
+  onReportClick,
+  onTimerClick,
+  onCollapseToggle,
+}) => {
   return (
-    <AntHeader className="px-4 bg-gray-100 shadow-sm flex items-center justify-between w-full h-16">
-      {/* Left side - Logo and menu */}
-      <div className="flex items-center">
+    <div className="bg-black w-full">
+      <AntHeader className="px-6 bg-white flex items-center justify-between w-full h-16 shadow-md mx-auto max-w-7xl">
+        {/* Left side - Back button and SessionCard */}
         <div className="flex items-center">
-          {/* Các button */}
           <BackButton
             variant="secondary"
-            onClick={onMenuClick || (() => console.log('Secondary button clicked'))}
+            onClick={onMenuClick || (() => console.log('Back button clicked'))}
             className="mr-4"
           />
 
-          <BackButton
-            fillColor="#ffffff"
-            hoverColor="#f3f4f6"
-            shadowEnabled={false}
-            onClick={onMenuClick || (() => console.log('No shadow button clicked'))}
-            className="mr-4"
-          />
-
-          <CollapseToggleButton
-            variant="default"
-            onClick={onReport || (() => console.log('Report button clicked'))}
-          />
-
-          {/* SessionCard với thiết kế từ Figma */}
-          <div className="ml-4">
+          <div className="ml-2">
             <SessionCardSVG
               sessionId="TOA-8GASMDUDFT"
               tags={[
@@ -55,23 +43,30 @@ const Header: React.FC<HeaderProps> = ({
                 {text: "P1", type: "blue"}
               ]}
               qcStatus="QC Passed:"
-              qcTimestamp={timestamp.includes("QC Passed:") ? timestamp.replace("QC Passed:", "") : timestamp}
+              qcTimestamp={timestamp}
               isExpandable={true}
             />
           </div>
-
         </div>
-      </div>
 
-      {/* Right side - Elapsed time */}
-      {elapsedTime && (
-        <div className="flex items-center">
-          <div className="text-gray-600 font-medium">
-            {elapsedTime}
-          </div>
+        {/* Right side - Report and Timer buttons */}
+        <div className="flex items-center gap-3">
+          <ReportTimer 
+            variant="report" 
+            label="Report" 
+            onClick={onReportClick || (() => console.log('Report button clicked'))} 
+          />
+          <ReportTimer 
+            variant="timer" 
+            label={timerValue} 
+            onClick={onTimerClick || (() => console.log('Timer button clicked'))} 
+          />
+          <CollapseToggleButton
+            onClick={onCollapseToggle || (() => console.log('Collapse toggle clicked'))}
+          />
         </div>
-      )}
-    </AntHeader>
+      </AntHeader>
+    </div>
   );
 };
 
