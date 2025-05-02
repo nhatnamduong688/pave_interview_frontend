@@ -101,7 +101,15 @@ export function SessionCardSVG({
             lineHeight: '125%',
             color: 'rgba(31, 41, 55, 0.38)',
           }}>
-            {qcStatus}{qcTimestamp && ` ${qcTimestamp}`}
+            {qcStatus}
+            {qcTimestamp && (
+              <span style={{ 
+                fontWeight: 700,
+                color: 'rgba(31, 41, 55, 0.55)' 
+              }}>
+                {` ${qcTimestamp}`}
+              </span>
+            )}
           </span>
 
           {isExpandable && (

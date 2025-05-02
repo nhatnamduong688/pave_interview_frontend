@@ -60,19 +60,6 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-
-          {/*<ProductCard*/}
-          {/*  productId="TOA-86ASMDUDFT"*/}
-          {/*  tags={[*/}
-          {/*    { text: "AMZ", type: "yellow" },*/}
-          {/*    { text: "P1", type: "blue" }*/}
-          {/*  ]}*/}
-          {/*  qcStatus="QC Passed:"*/}
-          {/*  qcTimestamp="2 days ago, 3:03:58 PM"*/}
-          {/*  variant="elevated" // Thay đổi variant từ "flat" sang "elevated"*/}
-          {/*  colorStrip="blue" // Thêm colorStrip nếu muốn có viền màu ở trên cùng*/}
-          {/*/>*/}
-
         </div>
       </div>
 
