@@ -4,6 +4,7 @@ import {SessionCardSVG} from "../molecules/SessionCard/SessionCardSVG";
 import ReportTimer from "../atoms/ReportTimer";
 import React from "react";
 import { CollapseToggleButton } from "../atoms/CollapseToggleButton";
+import { Tag } from "../molecules/SessionCard/SessionTag";
 
 const {Header: AntHeader} = Layout;
 
@@ -17,6 +18,8 @@ interface HeaderProps {
   title?: string;
   onBack?: () => void;
   onReport?: () => void;
+  sessionId?: string;
+  tags?: Tag[];
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -29,6 +32,8 @@ const Header: React.FC<HeaderProps> = ({
   title,
   onBack,
   onReport,
+  sessionId,
+  tags = []
 }) => {
   return (
     <div className="flex items-center justify-between w-full h-full">
@@ -42,6 +47,16 @@ const Header: React.FC<HeaderProps> = ({
 
         {title ? (
           <h1 className="text-lg font-medium">{title}</h1>
+        ) : sessionId ? (
+          <div>
+            <SessionCardSVG
+              sessionId={sessionId}
+              tags={tags}
+              qcStatus="QC Passed:"
+              qcTimestamp={timestamp}
+              isExpandable={true}
+            />
+          </div>
         ) : (
           <div>
             <SessionCardSVG

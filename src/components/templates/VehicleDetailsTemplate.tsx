@@ -4,6 +4,7 @@ import ImageViewer from '../molecules/ImageViewer';
 import ThumbnailList from '../molecules/ThumbnailList';
 import VehicleInfoPanel from '../molecules/VehicleInfoPanel';
 import ViewControlsToolbar from '../molecules/ViewControlsToolbar';
+import { Tag } from '../molecules/SessionCard/SessionTag';
 
 interface VehicleImage {
   id: string;
@@ -54,6 +55,23 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
     { id: 'reset', icon: '↩️', label: 'Reset View' },
   ];
 
+  // Format session ID from vehicle info
+  const sessionId = `${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`;
+  
+  // Create tags based on vehicle info
+  const tags: Tag[] = [];
+  
+  // Add trim tag if available
+  if (vehicleInfo.trim) {
+    tags.push({ text: vehicleInfo.trim, type: "yellow" });
+  }
+  
+  // Add default P1 tag
+  tags.push({ text: "P1", type: "blue" });
+  
+  // QC timestamp
+  const timestamp = "2 days ago, 3:03:58 PM";
+
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Main content area (left part) */}
@@ -61,7 +79,11 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
         {/* Header */}
         <div className="flex-none h-16 px-4 border-b border-gray-200 bg-white z-10">
           <Header 
-            title={`${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`}
+            // Use empty title to trigger SessionCardSVG
+            title=""
+            sessionId={sessionId}
+            tags={tags}
+            timestamp={timestamp}
             onBack={onBack}
             onReport={onReport}
             onCollapseToggle={handleCollapseToggle}
