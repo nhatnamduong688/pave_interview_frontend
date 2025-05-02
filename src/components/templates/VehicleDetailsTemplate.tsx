@@ -4,7 +4,6 @@ import ImageViewer from '../molecules/ImageViewer';
 import ThumbnailList from '../molecules/ThumbnailList';
 import VehicleInfoPanel from '../molecules/VehicleInfoPanel';
 import ViewControlsToolbar from '../molecules/ViewControlsToolbar';
-import ThumbnailPreviewBar from '../molecules/ThumbnailPreviewBar';
 
 interface VehicleImage {
   id: string;
@@ -50,89 +49,161 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   ];
 
   return (
-    <div className="grid grid-rows-[64px_1fr_56px] grid-cols-[64px_1fr_300px] min-h-screen max-h-screen w-full overflow-hidden">
-      {/* Header area */}
-      <div className="col-span-3 flex items-center h-16 px-4 border-b border-gray-200 bg-white z-10">
-        <Header 
-          title={`${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`}
-          onBack={onBack}
-          onReport={onReport}
-        />
-      </div>
-      
-      {/* Sidebar Left - Thumbnail List */}
-      <div className="w-16 p-2 border-r border-gray-200 overflow-y-auto bg-white">
-        <ThumbnailList
-          thumbnails={images}
-          activeId={activeImageId}
-          onSelect={setActiveImageId}
-        />
-      </div>
-      
-      {/* Main Viewer */}
-      <div className="overflow-auto flex items-center justify-center bg-gray-50">
-        <ImageViewer
-          src={activeImage?.src || ''}
-          alt={activeImage?.alt}
-          indicators={activeImage?.indicators}
-        />
-      </div>
-      
-      {/* Sidebar Right */}
-      <div className="w-[300px] p-4 border-l border-gray-200 overflow-y-auto bg-white">
-        <div className="h-full flex flex-col">
-          <h3 className="text-lg font-medium mb-4">Image Details</h3>
+    <div className="flex h-screen w-full overflow-hidden">
+      {/* Main content area (left part) */}
+      <div className="flex flex-col flex-1">
+        {/* Header */}
+        <div className="flex-none h-16 px-4 border-b border-gray-200 bg-white z-10">
+          <Header 
+            title={`${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`}
+            onBack={onBack}
+            onReport={onReport}
+          />
+        </div>
+        
+        {/* Center content with left sidebar and main viewer */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar Left - Thumbnail List */}
+          <div className="w-16 p-2 border-r border-gray-200 overflow-y-auto bg-white">
+            <ThumbnailList
+              thumbnails={images}
+              activeId={activeImageId}
+              onSelect={setActiveImageId}
+            />
+          </div>
           
-          {activeImage && (
-            <div className="space-y-4">
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Image Type</h4>
-                <p className="text-base">{activeImage.alt || 'Vehicle Image'}</p>
-              </div>
-              
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Indicators</h4>
-                <p className="text-base">{activeImage.indicators?.length || 0} points marked</p>
-              </div>
-              
-              <div>
-                <h4 className="text-sm font-medium text-gray-500">Image ID</h4>
-                <p className="text-base font-mono text-sm">{activeImage.id}</p>
-              </div>
-            </div>
-          )}
-          
-          <div className="mt-auto">
-            <h4 className="text-sm font-medium text-gray-500 mb-2">More Images</h4>
-            <div className="grid grid-cols-2 gap-2">
-              {images.slice(0, 4).map(image => (
-                <button 
-                  key={image.id}
-                  className={`aspect-square rounded overflow-hidden ${
-                    activeImageId === image.id ? 'ring-2 ring-blue-500' : 'border border-gray-200'
-                  }`}
-                  onClick={() => setActiveImageId(image.id)}
-                >
-                  <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
-                </button>
-              ))}
+          {/* Main Viewer */}
+          <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-50">
+            <ImageViewer
+              src={activeImage?.src || ''}
+              alt={activeImage?.alt}
+              indicators={activeImage?.indicators}
+            />
+          </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="flex-none h-14 px-4 border-t border-gray-200 bg-white">
+          <div className="flex items-center h-full">
+            <VehicleInfoPanel
+              year={vehicleInfo.year}
+              make={vehicleInfo.make}
+              model={vehicleInfo.model}
+              trim={vehicleInfo.trim}
+              bodyType={vehicleInfo.bodyType}
+            />
+            
+            <div className="ml-auto">
+              <ViewControlsToolbar buttons={toolbarButtons} />
             </div>
           </div>
         </div>
       </div>
       
-      {/* Footer */}
-      <div className="col-span-3 flex items-center h-14 px-4 border-t border-gray-200 bg-white">
-        <VehicleInfoPanel
-          year={vehicleInfo.year}
-          make={vehicleInfo.make}
-          model={vehicleInfo.model}
-          trim={vehicleInfo.trim}
-          bodyType={vehicleInfo.bodyType}
-        />
+      {/* Sidebar Right - Full height with fixed footer */}
+      <div className="w-[300px] h-full flex flex-col border-l border-gray-200 bg-white">
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          {/* Title with view state */}
+          <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800">LEFT VIEW</h2>
+            <div className="flex items-center">
+              <span className="h-8 w-8 flex items-center justify-center bg-gray-100 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="9" y1="3" x2="9" y2="21" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          
+          {/* Damage list */}
+          <div className="space-y-4 mt-2">
+            {/* Damage entry 1 */}
+            <div className="rounded-md border border-gray-200 overflow-hidden">
+              <div className="flex items-center px-3 py-2 bg-gray-50">
+                <div className="flex items-center justify-center h-6 w-6 rounded-full bg-red-100 text-red-600 text-xs font-medium mr-2">
+                  01
+                </div>
+                <div className="flex-1 text-sm">SCORE=5</div>
+              </div>
+              <div className="p-3 border-t border-gray-200">
+                <div className="flex items-center mb-1">
+                  <span className="inline-block h-4 w-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <path d="M7 7h.01" />
+                      <path d="M17 7h.01" />
+                      <path d="M7 17h.01" />
+                      <path d="M17 17h.01" />
+                    </svg>
+                  </span>
+                  <span className="text-sm text-gray-500">[C]QUARTER_PANEL_LEFT</span>
+                </div>
+                <h3 className="font-medium mb-1">DENTED_MAJOR_THROUGH_PAINT</h3>
+                <div className="text-xs text-gray-500">Duy.Nguyen Khanh</div>
+              </div>
+            </div>
+            
+            {/* Damage entry 2 */}
+            <div className="rounded-md border border-gray-200 overflow-hidden">
+              <div className="flex items-center px-3 py-2 bg-gray-50">
+                <div className="flex items-center justify-center h-6 w-6 rounded-full bg-yellow-100 text-yellow-600 text-xs font-medium mr-2">
+                  02
+                </div>
+                <div className="flex-1 text-sm">SCORE=3(included)</div>
+              </div>
+              <div className="p-3 border-t border-gray-200">
+                <div className="flex items-center mb-1">
+                  <span className="inline-block h-4 w-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <path d="M7 7h.01" />
+                      <path d="M17 7h.01" />
+                      <path d="M7 17h.01" />
+                      <path d="M17 17h.01" />
+                    </svg>
+                  </span>
+                  <span className="text-sm text-gray-500">[C]QUARTER_PANEL_LEFT</span>
+                </div>
+                <h3 className="font-medium mb-1">SCRATCH_MAJOR_THROUGH_PAINT</h3>
+                <div className="text-xs text-gray-500">Duy.Nguyen Khanh</div>
+              </div>
+            </div>
+            
+            {/* Damage entry 3 */}
+            <div className="rounded-md border border-gray-200 overflow-hidden">
+              <div className="flex items-center px-3 py-2 bg-gray-50">
+                <div className="flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-600 text-xs font-medium mr-2">
+                  03
+                </div>
+                <div className="flex-1 text-sm">SCORE=1</div>
+              </div>
+              <div className="p-3 border-t border-gray-200">
+                <div className="flex items-center mb-1">
+                  <span className="inline-block h-4 w-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <path d="M7 7h.01" />
+                      <path d="M17 7h.01" />
+                      <path d="M7 17h.01" />
+                      <path d="M17 17h.01" />
+                    </svg>
+                  </span>
+                  <span className="text-sm text-gray-500">[P]RMT) GAS_CAP_COVER_UNIQUE</span>
+                </div>
+                <h3 className="font-medium mb-1">BROKEN_MEDIUM</h3>
+                <div className="text-xs text-gray-500">Duy.Nguyen Khanh</div>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <div className="ml-auto">
-          <ViewControlsToolbar buttons={toolbarButtons} />
+        {/* Fixed footer with Finish button */}
+        <div className="flex-none p-4 border-t border-gray-200">
+          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition">
+            Finish [F]
+          </button>
         </div>
       </div>
     </div>
