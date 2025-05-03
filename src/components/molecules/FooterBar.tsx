@@ -24,13 +24,13 @@ interface FooterBarProps {
   // Optional callback functions
   onThumbnailClick?: (id: string) => void;
   onToolbarAction?: (actionId: string) => void;
-  
+
   // Color prop for icons
   iconColor?: string;
-  
+
   // Background style for buttons
   buttonBackgroundStyle?: 'transparent' | 'white';
-  
+
   // Background color for icons
   iconBackgroundColor?: string;
 }
@@ -47,39 +47,39 @@ const FooterBar: React.FC<FooterBarProps> = ({
   // Toolbar action groups with separators
   const toolbarGroups = [
     [
-      { 
-        id: 'move', 
-        icon: <MoveIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Move' 
-      },
-      { 
-        id: 'zoom', 
-        icon: <ZoomIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Zoom' 
+      {
+        id: 'move',
+        icon: <MoveIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Move'
       },
     ],
     [
-      { 
-        id: 'rotate', 
-        icon: <RotateIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Rotate' 
+      {
+        id: 'zoom',
+        icon: <ZoomIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Zoom'
       },
-      { 
-        id: 'measure', 
-        icon: <MeasureIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Measure' 
+      {
+        id: 'rotate',
+        icon: <RotateIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Rotate'
       },
     ],
     [
-      { 
-        id: 'reset', 
-        icon: <ResetIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Reset View' 
+      {
+        id: 'measure',
+        icon: <MeasureIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Measure'
       },
-      { 
-        id: 'save', 
-        icon: <SaveIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
-        label: 'Save View' 
+      {
+        id: 'reset',
+        icon: <ResetIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Reset View'
+      },
+      {
+        id: 'save',
+        icon: <SaveIcon color={iconColor} backgroundColor={iconBackgroundColor} />,
+        label: 'Save View'
       },
     ]
   ];
@@ -115,7 +115,7 @@ const FooterBar: React.FC<FooterBarProps> = ({
         {toolbarGroups.map((group, groupIndex) => (
           <React.Fragment key={`group-${groupIndex}`}>
             {groupIndex > 0 && (
-              <div className="h-5 w-[1px] bg-gray-100 mx-4"></div>
+              <div className="h-5 w-[1px] bg-gray-100"></div>
             )}
             <div className="flex items-center gap-1">
               {group.map(action => (
