@@ -4,6 +4,7 @@ import ImageViewer from '../molecules/ImageViewer';
 import ThumbnailList from '../molecules/ThumbnailList';
 import VehicleInfoPanel from '../molecules/VehicleInfoPanel';
 import ViewControlsToolbar from '../molecules/ViewControlsToolbar';
+import FooterBar from '../molecules/FooterBar';
 import { Tag } from '../molecules/SessionCard/SessionTag';
 
 interface VehicleImage {
@@ -72,6 +73,19 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   // QC timestamp
   const timestamp = "2 days ago, 3:03:58 PM";
 
+  // Define extra thumbnails for the footer
+  const extraThumbnails = images.slice(0, 3).map(img => ({
+    id: img.id,
+    src: img.src,
+    alt: img.alt
+  }));
+  
+  // Use side view orientation for vehicle diagram
+  const vehicleOrientation = 'side' as const;
+  
+  // Caption text based on vehicle info
+  const captionText = `${vehicleInfo.year} ${vehicleInfo.make}\n${vehicleInfo.model}`;
+
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Main content area (left part) */}
@@ -112,20 +126,14 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex-none h-14 px-4 border-t border-gray-200 bg-white">
-          <div className="flex items-center h-full">
-            <VehicleInfoPanel
-              year={vehicleInfo.year}
-              make={vehicleInfo.make}
-              model={vehicleInfo.model}
-              trim={vehicleInfo.trim}
-              bodyType={vehicleInfo.bodyType}
-            />
-
-            <div className="ml-auto">
-              <ViewControlsToolbar buttons={toolbarButtons} />
-            </div>
-          </div>
+        <div className="flex-none border-t border-gray-200">
+          <FooterBar
+            orientation={vehicleOrientation}
+            captionText={captionText}
+            extraThumbnails={extraThumbnails}
+            onThumbnailClick={(id) => setActiveImageId(id)}
+            onToolbarAction={(action) => console.log('Toolbar action:', action)}
+          />
         </div>
       </div>
 

@@ -11,6 +11,8 @@ import SessionCardDemo from './components/pages/SessionCardDemo'
 import ReportTimerDemoPage from './components/pages/ReportTimerDemoPage'
 import HomePage from './components/pages/HomePage'
 import VehicleDetailsPage from './components/pages/VehicleDetailsPage'
+import LegendDemo from './components/pages/LegendDemo'
+import LegendCaptionDemo from './components/pages/LegendCaptionDemo'
 import './App.css'
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/report-timer-demo" element={<ReportTimerDemoPage />} />
           <Route path="/vehicle-details" element={<VehicleDetailsPage />} />
           <Route path="/vehicle-details/:id" element={<VehicleDetailsPage />} />
+          <Route path="/legend-demo" element={<LegendDemo />} />
+          <Route path="/legend-caption-demo" element={<LegendCaptionDemo />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
