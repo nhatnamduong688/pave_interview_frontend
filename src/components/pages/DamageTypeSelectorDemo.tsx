@@ -54,7 +54,7 @@ const AllSelectorsPanel: React.FC = () => {
   // State for tracking selections
   const [selectedComponent, setSelectedComponent] = useState<string | number>(1);
   const [selectedComponents, setSelectedComponents] = useState<(string | number)[]>([1, 2, 4, 5, 6, 7]);
-  const [selectedMaterial, setSelectedMaterial] = useState<string | number>(1);
+  const [selectedMaterials, setSelectedMaterials] = useState<(string | number)[]>([1]);
   const [selectedDamageTypes, setSelectedDamageTypes] = useState<(string | number)[]>([4]);
   const [selectedSeverity, setSelectedSeverity] = useState('maj');
   const [throughPaint, setThroughPaint] = useState(true);
@@ -102,16 +102,19 @@ const AllSelectorsPanel: React.FC = () => {
     } else if (type === 'component') {
       return selectedComponents.includes(id);
     } else {
-      return selectedMaterial === id;
+      return selectedMaterials.includes(id);
     }
   };
 
   // Toggle option selection
   const toggleOption = (id: string | number, type: 'component' | 'material' | 'damage') => {
     if (type === 'damage') {
-      // Single-select for damage (just for demo purposes)
-      setSelectedDamageTypes([id]);
-      setActiveSelector(null);
+      // Multi-select for damage
+      if (selectedDamageTypes.includes(id)) {
+        setSelectedDamageTypes(selectedDamageTypes.filter(itemId => itemId !== id));
+      } else {
+        setSelectedDamageTypes([...selectedDamageTypes, id]);
+      }
     } else if (type === 'component') {
       // Multi-select for component
       if (selectedComponents.includes(id)) {
@@ -122,9 +125,12 @@ const AllSelectorsPanel: React.FC = () => {
       // Update primary selected component
       setSelectedComponent(id);
     } else {
-      // Single-select for material
-      setSelectedMaterial(id);
-      setActiveSelector(null);
+      // Multi-select for material
+      if (selectedMaterials.includes(id)) {
+        setSelectedMaterials(selectedMaterials.filter(itemId => itemId !== id));
+      } else {
+        setSelectedMaterials([...selectedMaterials, id]);
+      }
     }
   };
 
@@ -239,7 +245,11 @@ const AllSelectorsPanel: React.FC = () => {
           >
             <span className="text-xs font-mono font-semibold text-gray-800 uppercase">MATERIAL [M]</span>
             <div className="flex items-center">
-              <span className="text-xs font-mono font-semibold text-gray-800">{getLabel(selectedMaterial, materialTypes)}</span>
+              <span className="text-xs font-mono font-semibold text-gray-800">
+                {selectedMaterials.length > 0 
+                  ? getLabel(selectedMaterials[0], materialTypes) + (selectedMaterials.length > 1 ? ` +${selectedMaterials.length - 1}` : '')
+                  : 'Select'}
+              </span>
               <svg className="w-3 h-3 text-gray-600 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -255,7 +265,7 @@ const AllSelectorsPanel: React.FC = () => {
             <div className="flex items-center">
               <span className="text-xs font-mono font-semibold text-gray-800">
                 {selectedDamageTypes.length > 0 
-                  ? getLabel(selectedDamageTypes[0], damageTypes) 
+                  ? getLabel(selectedDamageTypes[0], damageTypes) + (selectedDamageTypes.length > 1 ? ` +${selectedDamageTypes.length - 1}` : '')
                   : 'Select'}
               </span>
               <svg className="w-3 h-3 text-gray-600 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -333,7 +343,7 @@ const DamageTypeSelectorDemo: React.FC = () => {
   const [componentVisible, setComponentVisible] = useState(false);
   
   const [selectedDamageTypes, setSelectedDamageTypes] = useState<(string | number)[]>([1, 2, 3]);
-  const [selectedMaterial, setSelectedMaterial] = useState<string | number>(1);
+  const [selectedMaterials, setSelectedMaterials] = useState<(string | number)[]>([1]);
   const [selectedComponent, setSelectedComponent] = useState<string | number>(1);
   
   const [filteredDamageTypes, setFilteredDamageTypes] = useState(damageTypes);
@@ -438,34 +448,34 @@ const DamageTypeSelectorDemo: React.FC = () => {
                     Open Material Selector
                   </Button>
                   
-                  <Divider>Selected Material</Divider>
+                  <Divider>Selected Materials</Divider>
                   
                   <div className="bg-gray-50 p-4 rounded-md">
-                    {selectedMaterial ? (
-                      <div>
-                        {(() => {
-                          const option = materialTypes.find(opt => opt.id === selectedMaterial);
-                          return option ? (
-                            <div>
-                              <Text strong>{option.label}</Text> <Text type="secondary">[{option.value}]</Text>
-                            </div>
-                          ) : null;
-                        })()}
-                      </div>
-                    ) : (
+                    {selectedMaterials.length === 0 ? (
                       <Text className="text-gray-500">No material selected</Text>
+                    ) : (
+                      <ul className="list-disc pl-5">
+                        {selectedMaterials.map(id => {
+                          const option = materialTypes.find(opt => opt.id === id);
+                          return option ? (
+                            <li key={id} className="mb-1">
+                              <Text strong>{option.label}</Text> <Text type="secondary">[{option.value}]</Text>
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
                     )}
                   </div>
                 </Space>
 
                 <MaterialSelector
                   options={filteredMaterialTypes}
-                  selectedOption={selectedMaterial}
-                  onSelectOption={(id) => setSelectedMaterial(id)}
+                  selectedOptions={selectedMaterials}
+                  onSelectOption={(ids) => setSelectedMaterials(ids)}
                   onSearch={handleMaterialSearch}
                   onCancel={() => setMaterialVisible(false)}
                   onConfirm={(selected) => {
-                    setSelectedMaterial(selected);
+                    setSelectedMaterials(selected);
                     setMaterialVisible(false);
                   }}
                   isVisible={materialVisible}
