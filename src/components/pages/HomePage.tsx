@@ -28,7 +28,31 @@ const HomePage: React.FC = () => {
     {
       title: 'FooterBar Demo',
       description: 'Demo của thanh Footer với Icons, Legend/Caption và Thumbnails.',
-      path: '/footer-demo',
+      path: '/footer-bar-demo',
+      highlight: true,
+    },
+    {
+      title: 'All Selectors Demo',
+      description: 'Demo tổng hợp của tất cả Selectors (Component, Material, Damage Type) với severity và toggle switches.',
+      path: '/all-selectors',
+      highlight: true,
+    },
+    {
+      title: 'Damage Type Selector',
+      description: 'Demo của component Damage Type Selector với khả năng multi-select.',
+      path: '/damage-type-selector',
+      highlight: true,
+    },
+    {
+      title: 'Material Selector',
+      description: 'Demo của component Material Selector với khả năng single-select.',
+      path: '/material-selector',
+      highlight: true,
+    },
+    {
+      title: 'Component Selector',
+      description: 'Demo của Component Selector cho việc chọn phần của xe.',
+      path: '/component-selector',
       highlight: true,
     },
     {

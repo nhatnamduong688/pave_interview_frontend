@@ -14,6 +14,10 @@ import VehicleDetailsPage from './components/pages/VehicleDetailsPage'
 import LegendDemo from './components/pages/LegendDemo'
 import LegendCaptionDemo from './components/pages/LegendCaptionDemo'
 import FooterBarDemo from './components/pages/FooterBarDemo'
+import DamageTypeSelectorDemo from './components/pages/DamageTypeSelectorDemo'
+import MaterialSelectorDemo from './components/pages/MaterialSelectorDemo'
+import ComponentSelectorDemo from './components/pages/ComponentSelectorDemo'
+import AllSelectorsDemo from './components/pages/AllSelectorsDemo'
 import './App.css'
 
 function App() {
@@ -34,6 +38,10 @@ function App() {
           <Route path="/legend-demo" element={<LegendDemo />} />
           <Route path="/legend-caption-demo" element={<LegendCaptionDemo />} />
           <Route path="/footer-bar-demo" element={<FooterBarDemo />} />
+          <Route path="/damage-type-selector" element={<DamageTypeSelectorDemo />} />
+          <Route path="/material-selector" element={<MaterialSelectorDemo />} />
+          <Route path="/component-selector" element={<ComponentSelectorDemo />} />
+          <Route path="/all-selectors" element={<AllSelectorsDemo />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
