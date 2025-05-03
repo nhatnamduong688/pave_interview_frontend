@@ -1,5 +1,13 @@
 import React from 'react';
 import LegendCaption from './LegendCaption';
+import {
+  MoveIcon,
+  ZoomIcon,
+  RotateIcon,
+  MeasureIcon,
+  ResetIcon,
+  SaveIcon
+} from '../atoms/icons';
 
 interface FooterBarProps {
   // Legend & Caption
@@ -27,15 +35,16 @@ const FooterBar: React.FC<FooterBarProps> = ({
   // Toolbar action groups with separators
   const toolbarGroups = [
     [
-      { id: 'move', icon: '↕️', label: 'Move' },
-      { id: 'zoom', icon: '🔍', label: 'Zoom' },
+      { id: 'move', icon: <MoveIcon />, label: 'Move' },
+      { id: 'zoom', icon: <ZoomIcon />, label: 'Zoom' },
     ],
     [
-      { id: 'rotate', icon: '🔄', label: 'Rotate' },
-      { id: 'measure', icon: '📏', label: 'Measure' },
+      { id: 'rotate', icon: <RotateIcon />, label: 'Rotate' },
+      { id: 'measure', icon: <MeasureIcon />, label: 'Measure' },
     ],
     [
-      { id: 'reset', icon: '↩️', label: 'Reset View' },
+      { id: 'reset', icon: <ResetIcon />, label: 'Reset View' },
+      { id: 'save', icon: <SaveIcon />, label: 'Save View' },
     ]
   ];
 
@@ -50,10 +59,8 @@ const FooterBar: React.FC<FooterBarProps> = ({
 
       {/* Legend & Caption (Left) */}
       <div className="ml-4">
-        <LegendCaption 
+        <LegendCaption
           caption={captionText}
-          svgWidth={56}
-          svgHeight={56}
         />
       </div>
 
@@ -68,11 +75,11 @@ const FooterBar: React.FC<FooterBarProps> = ({
               {group.map(action => (
                 <button
                   key={action.id}
-                  className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded transition-colors"
                   onClick={() => handleToolbarAction(action.id)}
                   title={action.label}
                 >
-                  <span>{action.icon}</span>
+                  {action.icon}
                 </button>
               ))}
             </div>
