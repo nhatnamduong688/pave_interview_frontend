@@ -15,10 +15,13 @@ const ThumbnailList: React.FC<ThumbnailListProps> = ({
                                                        activeId,
                                                        onSelect
                                                      }) => {
+  // Giới hạn số lượng thumbnails tối đa là 8
+  const limitedThumbnails = thumbnails.slice(0, 8);
+
   return (
     <div className="flex flex-col w-full py-2">
-      {thumbnails.map((thumbnail) => (
-        <div key={thumbnail.id} className="mb-3">
+      {limitedThumbnails.map((thumbnail) => (
+        <div key={thumbnail.id} className="mb-[8px]">
           <button
             className={`
               w-[72px]
@@ -29,7 +32,7 @@ const ThumbnailList: React.FC<ThumbnailListProps> = ({
               rounded-[4px]
               border
     ${activeId === thumbnail.id
-              ? 'border-blue-500 border-2'
+              ? 'border-2 border-yellow-400'
               : 'border-gray-100'}
   `}
             onClick={() => onSelect?.(thumbnail.id)}
@@ -37,7 +40,7 @@ const ThumbnailList: React.FC<ThumbnailListProps> = ({
             <img
               src={thumbnail.src}
               alt={thumbnail.alt || `Thumbnail ${thumbnail.id}`}
-              className="w-full h-full object-cover"
+              className="block w-full h-full object-cover"
             />
           </button>
         </div>

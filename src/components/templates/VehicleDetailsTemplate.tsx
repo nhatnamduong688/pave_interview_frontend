@@ -57,18 +57,18 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
 
   // Format session ID from vehicle info
   const sessionId = `${vehicleInfo.year}-${vehicleInfo.make}-${vehicleInfo.model}`;
-  
+
   // Create tags based on vehicle info
   const tags: Tag[] = [];
-  
+
   // Add trim tag if available
   if (vehicleInfo.trim) {
     tags.push({ text: vehicleInfo.trim, type: "yellow" });
   }
-  
+
   // Add default P1 tag
   tags.push({ text: "P1", type: "blue" });
-  
+
   // QC timestamp
   const timestamp = "2 days ago, 3:03:58 PM";
 
@@ -78,7 +78,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
       <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'mr-0' : 'mr-[300px]'}`}>
         {/* Header */}
         <div className="flex-none h-16 px-4 border-b border-gray-200 bg-white z-10">
-          <Header 
+          <Header
             // Use empty title to trigger SessionCardSVG
             title=""
             sessionId={sessionId}
@@ -89,20 +89,20 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
             onCollapseToggle={handleCollapseToggle}
           />
         </div>
-        
+
         {/* Center content with left sidebar and main viewer */}
-        <div className="flex flex-1 overflow-hidden pl-12">
+        <div className="flex flex-1 overflow-hidden pl-[12px] items-center">
           {/* Sidebar Left - Thumbnail List */}
-          <div className="w-[84px] border-r border-gray-200 bg-white mr-[12.22px] overflow-y-auto">
+          <div className="w-[84px] bg-white flex flex-col justify-center">
             <ThumbnailList
               thumbnails={images}
               activeId={activeImageId}
               onSelect={setActiveImageId}
             />
           </div>
-          
+
           {/* Main Viewer */}
-          <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-50 py-2">
+          <div className="flex-1 overflow-auto flex items-center justify-center py-2">
             <ImageViewer
               src={activeImage?.src || ''}
               alt={activeImage?.alt}
@@ -110,7 +110,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
             />
           </div>
         </div>
-        
+
         {/* Footer */}
         <div className="flex-none h-14 px-4 border-t border-gray-200 bg-white">
           <div className="flex items-center h-full">
@@ -121,14 +121,14 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
               trim={vehicleInfo.trim}
               bodyType={vehicleInfo.bodyType}
             />
-            
+
             <div className="ml-auto">
               <ViewControlsToolbar buttons={toolbarButtons} />
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Sidebar Right - Full height with fixed footer - Position absolute to allow main content to expand */}
       <div className={`absolute top-0 right-0 w-[300px] h-full flex flex-col border-l border-gray-200 bg-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
         {/* Scrollable content area */}
@@ -145,7 +145,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
               </span>
             </div>
           </div>
-          
+
           {/* Damage list */}
           <div className="space-y-4 mt-2">
             {/* Damage entry 1 */}
@@ -173,7 +173,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
                 <div className="text-xs text-gray-500">Duy.Nguyen Khanh</div>
               </div>
             </div>
-            
+
             {/* Damage entry 2 */}
             <div className="rounded-md border border-gray-200 overflow-hidden">
               <div className="flex items-center px-3 py-2 bg-gray-50">
@@ -199,7 +199,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
                 <div className="text-xs text-gray-500">Duy.Nguyen Khanh</div>
               </div>
             </div>
-            
+
             {/* Damage entry 3 */}
             <div className="rounded-md border border-gray-200 overflow-hidden">
               <div className="flex items-center px-3 py-2 bg-gray-50">
@@ -227,7 +227,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
             </div>
           </div>
         </div>
-        
+
         {/* Fixed footer with Finish button */}
         <div className="flex-none p-4 border-t border-gray-200">
           <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition">
@@ -239,4 +239,4 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   );
 };
 
-export default VehicleDetailsTemplate; 
+export default VehicleDetailsTemplate;
