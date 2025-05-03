@@ -5,13 +5,15 @@ interface IconProps {
   height?: number;
   color?: string;
   className?: string;
+  backgroundColor?: string;
 }
 
 const MoveIcon: React.FC<IconProps> = ({ 
   width = 24, 
   height = 24, 
   color = '#6B7280',
-  className = '' 
+  className = '',
+  backgroundColor = 'transparent'
 }) => {
   return (
     <svg 
@@ -21,6 +23,7 @@ const MoveIcon: React.FC<IconProps> = ({
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      style={{ backgroundColor }}
     >
       <path 
         fillRule="evenodd" 

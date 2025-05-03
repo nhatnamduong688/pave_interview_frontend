@@ -48,52 +48,94 @@ const FooterBarDemo: React.FC = () => {
           </div>
         </div>
 
-        {/* FooterBar with colored icons */}
+        {/* FooterBar with transparent background buttons (default) */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">FooterBar (Màu sắc)</h2>
+          <h2 className="text-xl font-bold mb-4">FooterBar (Nền trong suốt)</h2>
           <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <FooterBar 
               captionText="Vehicle Front View" 
               extraThumbnails={mockThumbnails}
               onToolbarAction={handleToolbarAction}
               onThumbnailClick={handleThumbnailClick}
-              useColoredIcons={true}
+              iconColor="#6B7280"
+              buttonBackgroundStyle="transparent"
             />
           </div>
         </div>
 
-        {/* FooterBar with grayscale icons */}
+        {/* FooterBar with white background buttons */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">FooterBar (Trắng đen)</h2>
+          <h2 className="text-xl font-bold mb-4">FooterBar (Nền trắng)</h2>
           <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <FooterBar 
               captionText="Vehicle Front View" 
               extraThumbnails={mockThumbnails}
               onToolbarAction={handleToolbarAction}
               onThumbnailClick={handleThumbnailClick}
-              useColoredIcons={false}
+              iconColor="#6B7280"
+              buttonBackgroundStyle="white"
             />
           </div>
         </div>
 
-        {/* FooterBar with just the toolbar */}
+        {/* FooterBar with colored icons and transparent background */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">FooterBar (Chỉ toolbar)</h2>
+          <h2 className="text-xl font-bold mb-4">FooterBar (Icon màu đỏ, nền trong suốt)</h2>
           <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <FooterBar 
-              onToolbarAction={handleToolbarAction}
-              useColoredIcons={true}
-            />
-          </div>
-        </div>
-
-        {/* FooterBar with just the thumbnails */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">FooterBar (Chỉ thumbnails)</h2>
-          <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-            <FooterBar 
+              captionText="Vehicle Front View" 
               extraThumbnails={mockThumbnails}
+              onToolbarAction={handleToolbarAction}
               onThumbnailClick={handleThumbnailClick}
+              iconColor="#EF4444"
+              buttonBackgroundStyle="transparent"
+            />
+          </div>
+        </div>
+
+        {/* FooterBar with colored icons and white background */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-4">FooterBar (Icon màu xanh, nền trắng)</h2>
+          <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <FooterBar 
+              captionText="Vehicle Front View" 
+              extraThumbnails={mockThumbnails}
+              onToolbarAction={handleToolbarAction}
+              onThumbnailClick={handleThumbnailClick}
+              iconColor="#3B82F6"
+              buttonBackgroundStyle="white"
+            />
+          </div>
+        </div>
+
+        {/* FooterBar with colored icons background */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-4">FooterBar (Nền icon màu xám nhạt)</h2>
+          <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <FooterBar 
+              captionText="Vehicle Front View" 
+              extraThumbnails={mockThumbnails}
+              onToolbarAction={handleToolbarAction}
+              onThumbnailClick={handleThumbnailClick}
+              iconColor="#6B7280"
+              iconBackgroundColor="#F3F4F6"
+              buttonBackgroundStyle="transparent"
+            />
+          </div>
+        </div>
+
+        {/* FooterBar with colored icons and colored background */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-4">FooterBar (Icon xanh, nền vàng nhạt)</h2>
+          <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <FooterBar 
+              captionText="Vehicle Front View" 
+              extraThumbnails={mockThumbnails}
+              onToolbarAction={handleToolbarAction}
+              onThumbnailClick={handleThumbnailClick}
+              iconColor="#3B82F6"
+              iconBackgroundColor="#FEF3C7"
+              buttonBackgroundStyle="white"
             />
           </div>
         </div>

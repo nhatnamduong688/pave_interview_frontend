@@ -27,6 +27,12 @@ interface FooterBarProps {
   
   // Color prop for icons
   iconColor?: string;
+  
+  // Background style for buttons
+  buttonBackgroundStyle?: 'transparent' | 'white';
+  
+  // Background color for icons
+  iconBackgroundColor?: string;
 }
 
 const FooterBar: React.FC<FooterBarProps> = ({
@@ -34,43 +40,45 @@ const FooterBar: React.FC<FooterBarProps> = ({
   extraThumbnails = [],
   onThumbnailClick,
   onToolbarAction,
-  iconColor = '#6B7280' // Default to gray, but can be customized
+  iconColor = '#6B7280', // Default to gray, but can be customized
+  buttonBackgroundStyle = 'white', // Default to transparent background
+  iconBackgroundColor = 'transparent' // Default to transparent icon background
 }) => {
   // Toolbar action groups with separators
   const toolbarGroups = [
     [
       { 
         id: 'move', 
-        icon: <MoveIcon color={iconColor} />, 
+        icon: <MoveIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Move' 
       },
       { 
         id: 'zoom', 
-        icon: <ZoomIcon color={iconColor} />, 
+        icon: <ZoomIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Zoom' 
       },
     ],
     [
       { 
         id: 'rotate', 
-        icon: <RotateIcon color={iconColor} />, 
+        icon: <RotateIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Rotate' 
       },
       { 
         id: 'measure', 
-        icon: <MeasureIcon color={iconColor} />, 
+        icon: <MeasureIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Measure' 
       },
     ],
     [
       { 
         id: 'reset', 
-        icon: <ResetIcon color={iconColor} />, 
+        icon: <ResetIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Reset View' 
       },
       { 
         id: 'save', 
-        icon: <SaveIcon color={iconColor} />, 
+        icon: <SaveIcon color={iconColor} backgroundColor={iconBackgroundColor} />, 
         label: 'Save View' 
       },
     ]
@@ -82,8 +90,18 @@ const FooterBar: React.FC<FooterBarProps> = ({
     }
   };
 
+  // Determine button style based on the buttonBackgroundStyle prop
+  const getButtonClassName = () => {
+    if (buttonBackgroundStyle === 'white') {
+      // white style
+      return "w-8 h-8 flex flex-col justify-center items-center p-0 gap-1 rounded-lg bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors";
+    }
+    // transparent style
+    return "w-8 h-8 flex flex-col justify-center items-center p-0 gap-1 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors";
+  };
+
   return (
-    <footer className="w-full py-4 bg-white shadow-inner flex items-center justify-between">
+    <footer className="w-full py-4 bg-white flex items-center justify-between">
 
       {/* Legend & Caption (Left) */}
       <div className="ml-4">
@@ -93,17 +111,17 @@ const FooterBar: React.FC<FooterBarProps> = ({
       </div>
 
       {/* Footer Toolbar (Center) */}
-      <div className="flex items-center px-4 py-2 rounded-md shadow-md bg-white">
+      <div className="flex flex-row items-center px-3 py-2 gap-5 h-12 bg-white border border-[#F0F0F0] shadow-[0px_4px_10px_rgba(0,0,0,0.05)] rounded-3xl">
         {toolbarGroups.map((group, groupIndex) => (
           <React.Fragment key={`group-${groupIndex}`}>
             {groupIndex > 0 && (
-              <div className="h-6 w-px bg-gray-200 mx-4"></div>
+              <div className="h-5 w-[1px] bg-gray-100 mx-4"></div>
             )}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-1">
               {group.map(action => (
                 <button
                   key={action.id}
-                  className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors"
+                  className={getButtonClassName()}
                   onClick={() => handleToolbarAction(action.id)}
                   title={action.label}
                 >
