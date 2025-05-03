@@ -20,6 +20,23 @@ const HomePage: React.FC = () => {
       highlight: true,
     },
     {
+      title: 'Icon Demo',
+      description: 'Demo của các SVG icon components với tùy chỉnh kích thước và màu sắc.',
+      path: '/icon-demo',
+      highlight: true,
+    },
+    {
+      title: 'FooterBar Demo',
+      description: 'Demo của thanh Footer với Icons, Legend/Caption và Thumbnails.',
+      path: '/footer-demo',
+      highlight: true,
+    },
+    {
+      title: 'Legend & Caption Demo',
+      description: 'Demo của Legend và Caption components cho vehicle diagrams.',
+      path: '/legend-caption-demo',
+    },
+    {
       title: 'Session Card Demo',
       description: 'Demo của Session Card với thiết kế từ Figma.',
       path: '/session-card-demo',

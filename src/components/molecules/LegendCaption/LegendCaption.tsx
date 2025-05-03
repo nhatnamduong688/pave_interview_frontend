@@ -1,5 +1,5 @@
 import React from 'react';
-import vehicleDiagramSvg from '@/assets/svg/vehicle-diagram-legend.svg?raw';
+import vehicleDiagramSvg from '../../../assets/svg/vehicle-diagram-legend.svg?raw';
 
 interface LegendCaptionProps {
   caption?: string;

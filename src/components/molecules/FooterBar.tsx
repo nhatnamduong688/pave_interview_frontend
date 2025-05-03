@@ -1,5 +1,5 @@
 import React from 'react';
-import LegendCaption from './LegendCaption';
+import LegendCaption from './LegendCaption/LegendCaption';
 import {
   MoveIcon,
   ZoomIcon,
@@ -24,27 +24,55 @@ interface FooterBarProps {
   // Optional callback functions
   onThumbnailClick?: (id: string) => void;
   onToolbarAction?: (actionId: string) => void;
+  
+  // Color prop for icons
+  iconColor?: string;
 }
 
 const FooterBar: React.FC<FooterBarProps> = ({
   captionText,
   extraThumbnails = [],
   onThumbnailClick,
-  onToolbarAction
+  onToolbarAction,
+  iconColor = '#6B7280' // Default to gray, but can be customized
 }) => {
   // Toolbar action groups with separators
   const toolbarGroups = [
     [
-      { id: 'move', icon: <MoveIcon />, label: 'Move' },
-      { id: 'zoom', icon: <ZoomIcon />, label: 'Zoom' },
+      { 
+        id: 'move', 
+        icon: <MoveIcon color={iconColor} />, 
+        label: 'Move' 
+      },
+      { 
+        id: 'zoom', 
+        icon: <ZoomIcon color={iconColor} />, 
+        label: 'Zoom' 
+      },
     ],
     [
-      { id: 'rotate', icon: <RotateIcon />, label: 'Rotate' },
-      { id: 'measure', icon: <MeasureIcon />, label: 'Measure' },
+      { 
+        id: 'rotate', 
+        icon: <RotateIcon color={iconColor} />, 
+        label: 'Rotate' 
+      },
+      { 
+        id: 'measure', 
+        icon: <MeasureIcon color={iconColor} />, 
+        label: 'Measure' 
+      },
     ],
     [
-      { id: 'reset', icon: <ResetIcon />, label: 'Reset View' },
-      { id: 'save', icon: <SaveIcon />, label: 'Save View' },
+      { 
+        id: 'reset', 
+        icon: <ResetIcon color={iconColor} />, 
+        label: 'Reset View' 
+      },
+      { 
+        id: 'save', 
+        icon: <SaveIcon color={iconColor} />, 
+        label: 'Save View' 
+      },
     ]
   ];
 
@@ -75,11 +103,13 @@ const FooterBar: React.FC<FooterBarProps> = ({
               {group.map(action => (
                 <button
                   key={action.id}
-                  className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+                  className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-gray-50 transition-colors"
                   onClick={() => handleToolbarAction(action.id)}
                   title={action.label}
                 >
-                  {action.icon}
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    {action.icon}
+                  </div>
                 </button>
               ))}
             </div>
