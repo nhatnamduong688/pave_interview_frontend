@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, Typography, Button, notification, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Typography, Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store';
 import Header from '../organisms/Header';
 import ThumbnailList from '../molecules/ThumbnailList';
 import CustomAnnotationFooter from '../molecules/CustomAnnotationFooter';
@@ -9,25 +8,10 @@ import InteractiveImageViewer from '../molecules/InteractiveImageViewer';
 import AnnotationList from '../molecules/AnnotationList';
 import { Tag } from '../molecules/SessionCard/SessionTag';
 
-// Redux actions và selectors
-import {
-  setActiveImage,
-  addIndicator,
-  selectIndicator,
-  clearSelection,
-  removeIndicator,
-  resetImageIndicators,
-  resetAllIndicators,
-  updateIndicator,
-} from '../../store/slices/clickIndicatorSlice';
-
-import {
-  selectActiveImageId,
-  selectActiveImageIndicators,
-  selectSelectedIndicator,
-} from '../../store/selectors/clickIndicatorSelectors';
-
-import { v4 as uuidv4 } from 'uuid';
+// Custom hooks
+import { useVehicleAnnotation } from '../../hooks/useVehicleAnnotation';
+import { useAnnotationPopup } from '../../hooks/useAnnotationPopup';
+import { useUIState } from '../../hooks/useUIState';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -532,276 +516,94 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   const { id: vehicleIdFromUrl } = useParams<{ id?: string }>();
   const vehicleId = vehicleIdFromUrl || mockVehicleData.vehicleId;
   
-  // Redux hooks
-  const dispatch = useAppDispatch();
-  const activeImageId = useAppSelector(selectActiveImageId);
-  const indicators = useAppSelector(selectActiveImageIndicators);
-  const selectedIndicator = useAppSelector(selectSelectedIndicator);
+  // Sử dụng các custom hooks
+  const {
+    activeImageId,
+    activeImage,
+    indicators,
+    selectedIndicator,
+    isAnnotationMode,
+    tempIndicator,
+    handleImageClick,
+    handleIndicatorClick,
+    handleRemoveIndicator,
+    handleClearSelection,
+    handleResetCurrentImage,
+    handleResetAllImages,
+    handleThumbnailClick,
+    handleToggleAnnotationMode,
+    handleToolbarAction,
+    saveAnnotation,
+    setTempIndicator
+  } = useVehicleAnnotation({ initialImages: mockVehicleData.images });
   
-  // Local state
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
-  const [isAnnotationMode, setIsAnnotationMode] = useState<boolean>(false);
-  const [activeDamageType, setActiveDamageType] = useState(damageTypeOptions[0]);
-  const [activeComponent, setActiveComponent] = useState(componentTypes[0]);
-  const [activeSidebarTab, setActiveSidebarTab] = useState<string>('annotations');
+  const {
+    activePopup,
+    tempDamageType,
+    tempComponent,
+    editingIndicatorId,
+    severity,
+    throughPaint,
+    pendingAnnotation,
+    selectedDamageTypes,
+    activeDamageType,
+    activeComponent,
+    handleSelectDamageType,
+    handleSelectComponent,
+    handlePopupDamageTypeSelect,
+    handlePopupComponentSelect,
+    handlePopupCancel,
+    handlePopupDamageTypeConfirm,
+    handleSeverityChange,
+    handleThroughPaintToggle,
+    startNewAnnotation,
+    startEditingAnnotation,
+    prepareAnnotationData
+  } = useAnnotationPopup({ damageTypeOptions, componentTypes });
   
-  // Popup state
-  const [activePopup, setActivePopup] = useState<'damageType' | 'component' | null>(null);
-  const [tempDamageType, setTempDamageType] = useState<string | null>(null);
-  const [tempComponent, setTempComponent] = useState<string | null>(null);
-  const [editingIndicatorId, setEditingIndicatorId] = useState<string | null>(null);
-  const [severity, setSeverity] = useState<string>('maj');
-  const [throughPaint, setThroughPaint] = useState<boolean>(false);
-  const [pendingAnnotation, setPendingAnnotation] = useState<{x: number, y: number} | null>(null);
-  const [selectedDamageTypes, setSelectedDamageTypes] = useState<string[]>([]);
+  const {
+    isSidebarCollapsed,
+    handleCollapseToggle,
+    handleBack,
+    handleReport,
+    getActiveViewDetail
+  } = useUIState();
   
-  // Thêm state để theo dõi indicator tạm thời
-  const [tempIndicator, setTempIndicator] = useState<TempIndicator | null>(null);
-  
-  // Set active image on component mount if not already set
-  useEffect(() => {
-    if (!activeImageId && mockVehicleData.images.length > 0) {
-      dispatch(setActiveImage(mockVehicleData.images[0].id));
-    }
-  }, [dispatch, activeImageId]);
-  
-  // Get current active image
-  const activeImage = mockVehicleData.images.find(img => img.id === activeImageId) || mockVehicleData.images[0];
-  
-  // Event handlers
-  const handleImageClick = (x: number, y: number) => {
-    if (!isAnnotationMode || !activeImageId) return;
+  // Hàm xử lý click hình ảnh đã được re-implement
+  const onImageClick = (x: number, y: number) => {
+    if (!isAnnotationMode) return;
     
-    // Hủy bất kỳ indicator tạm thời nào đang tồn tại
-    if (tempIndicator) {
-      setTempIndicator(null);
-    }
-    
-    // Tạo indicator tạm thời
-    const defaultDamageType = damageTypeOptions[0];
-    setTempIndicator({
-      x,
-      y,
-      damageType: defaultDamageType.id,
-      color: defaultDamageType.color
-    });
-    
-    // Lưu vị trí annotation để xử lý trong popup
-    setPendingAnnotation({x, y});
-    
-    // Khởi tạo popup chọn loại thiệt hại
-    setTempDamageType(defaultDamageType.id);
-    setTempComponent(null);
-    setSeverity('maj');
-    setThroughPaint(false);
-    setSelectedDamageTypes([defaultDamageType.id]);
-    setActivePopup('damageType');
-  };
-  
-  const handleIndicatorClick = (id: string) => {
-    if (activeImageId) {
-      dispatch(selectIndicator({ imageId: activeImageId, indicatorId: id }));
-      
-      // Find the indicator
-      const indicator = indicators.find(ind => ind.id === id);
-      if (indicator) {
-        // Set up for editing
-        setEditingIndicatorId(id);
-        setTempDamageType(indicator.damageType || null);
-        setTempComponent(indicator.component || null);
-        
-        // Show damage type popup first
-        setActivePopup('damageType');
-      }
+    // Sử dụng handleImageClick từ hook useVehicleAnnotation
+    const position = handleImageClick(x, y, damageTypeOptions[0]);
+    if (position) {
+      startNewAnnotation(position, damageTypeOptions[0]);
     }
   };
   
-  const handleRemoveIndicator = (id: string) => {
-    if (activeImageId) {
-      dispatch(removeIndicator({ imageId: activeImageId, indicatorId: id }));
-      notification.success({
-        message: 'Annotation Removed',
-        description: 'The annotation has been removed successfully.'
+  // Hàm xử lý click indicator đã được re-implement
+  const onIndicatorClick = (id: string) => {
+    const indicator = handleIndicatorClick(id);
+    if (indicator) {
+      startEditingAnnotation(indicator);
+    }
+  };
+
+  // Hàm xử lý cancel popup
+  const onPopupCancel = () => {
+    handlePopupCancel(() => setTempIndicator(null));
+  };
+  
+  // Hàm xử lý confirm popup component
+  const onPopupComponentConfirm = () => {
+    const annotationData = prepareAnnotationData(tempIndicator);
+    if (annotationData && activeImageId) {
+      saveAnnotation({
+        ...annotationData,
+        imageId: activeImageId
       });
     }
   };
-  
-  const handleClearSelection = () => {
-    dispatch(clearSelection());
-  };
-  
-  const handleResetCurrentImage = () => {
-    if (activeImageId) {
-      dispatch(resetImageIndicators(activeImageId));
-      notification.info({
-        message: 'Annotations Cleared',
-        description: 'All annotations for this image have been cleared.'
-      });
-    }
-  };
-  
-  const handleResetAllImages = () => {
-    dispatch(resetAllIndicators());
-    notification.warning({
-      message: 'All Annotations Cleared',
-      description: 'All annotations for all images have been cleared.'
-    });
-  };
-  
-  const handleThumbnailClick = (id: string) => {
-    dispatch(setActiveImage(id));
-  };
-  
-  const handleToggleAnnotationMode = () => {
-    setIsAnnotationMode(!isAnnotationMode);
-    // Clear selection when toggling mode
-    dispatch(clearSelection());
-  };
-  
-  const handleCollapseToggle = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-  
-  const handleBack = () => {
-    console.log('Navigate back');
-    // In a real app: navigate(-1) or similar
-  };
-  
-  const handleReport = () => {
-    console.log('Report issue');
-    // In a real app: open modal or navigate to report page
-  };
-  
-  const handleToolbarAction = (action: string) => {
-    if (action === 'move') {
-      setIsAnnotationMode(false);
-    } else if (action === 'annotate') {
-      setIsAnnotationMode(true);
-    }
-  };
-  
-  const handleSelectDamageType = (damageTypeId: string) => {
-    const damageType = damageTypeOptions.find(dt => dt.id === damageTypeId);
-    if (damageType) {
-      setActiveDamageType(damageType);
-    }
-  };
-  
-  const handleSelectComponent = (componentId: string) => {
-    const component = componentTypes.find(c => c.id === componentId);
-    if (component) {
-      setActiveComponent(component);
-    }
-  };
-  
-  // Popup handlers
-  const handlePopupDamageTypeSelect = (id: string) => {
-    if (selectedDamageTypes.includes(id)) {
-      // Multi-select mode for damage types
-      setSelectedDamageTypes(prev => prev.filter(item => item !== id));
-    } else {
-      setSelectedDamageTypes(prev => [...prev, id]);
-    }
-    setTempDamageType(id);
-  };
-  
-  const handlePopupComponentSelect = (id: string) => {
-    setTempComponent(id);
-  };
-  
-  const handlePopupCancel = () => {
-    // Xóa indicator tạm thời khi hủy popup
-    setTempIndicator(null);
-    
-    // Reset temp values and close popup
-    setTempDamageType(null);
-    setTempComponent(null);
-    setActivePopup(null);
-    setEditingIndicatorId(null);
-    setPendingAnnotation(null);
-  };
-  
-  const handlePopupDamageTypeConfirm = () => {
-    // Move to component selection
-    setActivePopup('component');
-  };
-  
-  const handleSeverityChange = (newSeverity: string) => {
-    setSeverity(newSeverity);
-  };
-  
-  const handleThroughPaintToggle = () => {
-    setThroughPaint(!throughPaint);
-  };
-  
-  const handlePopupComponentConfirm = () => {
-    if (editingIndicatorId) {
-      // Đang chỉnh sửa một indicator đã tồn tại
-      if (tempDamageType && tempComponent && activeImageId) {
-        // Find the damage type object
-        const damageType = damageTypeOptions.find(dt => dt.id === tempDamageType);
-        
-        if (damageType) {
-          // Update the indicator
-          dispatch(updateIndicator({
-            imageId: activeImageId,
-            indicatorId: editingIndicatorId,
-            updates: {
-              damageType: tempDamageType,
-              component: tempComponent,
-              color: damageType.color,
-              confirmed: true,
-              severity: severity,
-              throughPaint: throughPaint
-            }
-          }));
-          
-          notification.success({
-            message: 'Annotation Updated',
-            description: `Updated to ${damageType.label} on ${componentTypes.find(c => c.id === tempComponent)?.label}`
-          });
-        }
-      }
-    } else if (pendingAnnotation && tempIndicator) {
-      // Đang tạo một indicator mới
-      if (tempDamageType && tempComponent && activeImageId) {
-        const damageType = damageTypeOptions.find(dt => dt.id === tempDamageType);
-        
-        if (damageType) {
-          // Tạo mới indicator chính thức trong Redux
-          const newIndicator = { 
-            imageId: activeImageId, 
-            x: tempIndicator.x, 
-            y: tempIndicator.y, 
-            damageType: tempDamageType,
-            component: tempComponent,
-            color: damageType.color,
-            confirmed: true,
-            severity: severity,
-            throughPaint: throughPaint
-          };
-          
-          dispatch(addIndicator(newIndicator));
-          
-          notification.success({
-            message: 'Annotation Added',
-            description: `Added ${damageType.label} on ${componentTypes.find(c => c.id === tempComponent)?.label}`
-          });
-        }
-      }
-    }
-    
-    // Xóa indicator tạm thời
-    setTempIndicator(null);
-    
-    // Reset and close popup
-    setTempDamageType(null);
-    setTempComponent(null);
-    setActivePopup(null);
-    setEditingIndicatorId(null);
-    setPendingAnnotation(null);
-  };
-  
+
   // Format session ID from vehicle info
   const sessionId = `${mockVehicleData.vehicleInfo.year}-${mockVehicleData.vehicleInfo.make}-${mockVehicleData.vehicleInfo.model}`;
 
@@ -848,18 +650,8 @@ const VehicleDamageAnnotationV2: React.FC = () => {
     { id: 'reset', icon: '↩️', label: 'Reset View' },
   ];
   
-  // Rich view detail for sidebar
-  const getActiveViewDetail = () => {
-    switch (activeImage?.id) {
-      case 'photo-1': return 'FRONT VIEW';
-      case 'photo-2': return 'LEFT VIEW';
-      case 'photo-3': return 'RIGHT VIEW';
-      case 'photo-4': return 'REAR VIEW';
-      case 'photo-5': return 'HOOD VIEW';
-      case 'photo-6': return 'ROOF VIEW';
-      default: return 'CURRENT VIEW';
-    }
-  };
+  // Sử dụng getActiveViewDetail từ hook useUIState
+  const activeViewDetail = getActiveViewDetail(activeImage?.id);
   
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -897,8 +689,8 @@ const VehicleDamageAnnotationV2: React.FC = () => {
               alt={activeImage?.alt}
               indicators={indicators}
               isInteractionEnabled={isAnnotationMode}
-              onImageClick={handleImageClick}
-              onIndicatorClick={handleIndicatorClick}
+              onImageClick={onImageClick}
+              onIndicatorClick={onIndicatorClick}
             />
             
             {/* Hiển thị indicator tạm thời */}
@@ -921,7 +713,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
                 options={damageTypeOptions}
                 selectedOption={tempDamageType}
                 onSelect={handlePopupDamageTypeSelect}
-                onCancel={handlePopupCancel}
+                onCancel={onPopupCancel}
                 onConfirm={handlePopupDamageTypeConfirm}
                 showSearch={true}
                 showSeverity={true}
@@ -943,8 +735,8 @@ const VehicleDamageAnnotationV2: React.FC = () => {
                 options={componentTypes}
                 selectedOption={tempComponent}
                 onSelect={handlePopupComponentSelect}
-                onCancel={handlePopupCancel}
-                onConfirm={handlePopupComponentConfirm}
+                onCancel={onPopupCancel}
+                onConfirm={onPopupComponentConfirm}
                 showSearch={true}
                 showSeverity={false}
                 showThroughPaint={false}
@@ -973,7 +765,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
         <div className="flex-1 overflow-y-auto space-y-4 relative">
           {/* Title with view state */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-800">{getActiveViewDetail()}</h2>
+            <h2 className="text-lg font-medium text-gray-800">{activeViewDetail}</h2>
             <div className="flex items-center">
               <button className="p-1" onClick={handleCollapseToggle}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1057,7 +849,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
                       className={`rounded-md border overflow-hidden cursor-pointer ${
                         indicator.isHighlighted ? 'ring-2 ring-blue-300 border-blue-300' : 'border-gray-200'
                       }`}
-                      onClick={() => handleIndicatorClick(indicator.id)}
+                      onClick={() => onIndicatorClick(indicator.id)}
                     >
                       <div className="flex items-center px-3 py-2 bg-gray-50">
                         <div 
