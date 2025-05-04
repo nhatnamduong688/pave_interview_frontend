@@ -22,6 +22,7 @@ import EnhancedAllSelectorsDemo from './components/pages/EnhancedAllSelectorsDem
 import DamageSelectionWithPopup from './components/pages/DamageSelectionWithPopup'
 import ReduxDemoPage from './components/pages/ReduxDemoPage'
 import VehicleDamageSelectionRedux from './components/pages/VehicleDamageSelectionRedux'
+import DamageSelectionRedux from './components/pages/DamageSelectionRedux'
 import './App.css'
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           <Route path="/option-states" element={<OptionStateDemo />} />
           <Route path="/enhanced-selectors" element={<EnhancedAllSelectorsDemo />} />
           <Route path="/damage-selection" element={<DamageSelectionWithPopup />} />
+          <Route path="/damage-selection-redux" element={<DamageSelectionRedux />} />
           <Route path="/redux-demo" element={<ReduxDemoPage />} />
           <Route path="/vehicle-damage-redux" element={<VehicleDamageSelectionRedux />} />
           <Route path="/home" element={<HomePage />} />
