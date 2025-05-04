@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "useUnknownInCatchVariables": false,
+    "strict": false,
+    "isolatedModules": false
+  }
+} 
