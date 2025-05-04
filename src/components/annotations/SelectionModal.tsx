@@ -68,7 +68,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
       }}
     >
       {/* Header with title only */}
-      <div className="px-3 py-1 border-b border-gray-200">
+      <div className="px-3 py-1">
         <h2 className="text-xs font-mono font-semibold text-gray-900 uppercase tracking-tight">{title}</h2>
       </div>
       
