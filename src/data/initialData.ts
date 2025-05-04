@@ -69,12 +69,12 @@ export const initialData = {
     selectedPhotoId: "photo-4",
     selectedAnnotationId: null,
     annotationInProgress: {
-      photoId: null,
-      shape: null,
-      components: [],
-      material: null,
-      damageType: [],
-      severity: null,
+      photoId: null as null | string,
+      shape: null as null | { type: string; x: number; y: number; radius: number },
+      components: [] as string[],
+      material: null as null | string,
+      damageType: [] as string[],
+      severity: null as null | number,
       throughPaint: false
     },
     finished: false
