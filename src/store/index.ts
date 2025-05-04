@@ -1,56 +1,73 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { all } from 'redux-saga/effects';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
+// Reducers
 import optionsReducer from './slices/optionsSlice';
 import jobReducer from './slices/jobSlice';
 import uiReducer from './slices/uiSlice';
-import rootSaga from './sagas';
+import vehicleDetailsReducer from './slices/vehicleDetailsSlice';
+import clickIndicatorReducer from './slices/clickIndicatorSlice';
 
-// Cấu hình Redux Persist
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['job'], // Chỉ lưu job state, không lưu UI state
-};
+// Sagas
+import { optionsSaga } from './sagas/optionsSaga';
+import { jobSaga } from './sagas/jobSaga';
+import { vehicleDetailsSaga } from './sagas/vehicleDetailsSaga';
 
-// Tạo root reducer
+// Root reducer
 const rootReducer = combineReducers({
   options: optionsReducer,
   job: jobReducer,
   ui: uiReducer,
+  vehicleDetails: vehicleDetailsReducer,
+  clickIndicator: clickIndicatorReducer
 });
 
-// Tạo persisted reducer
+// Root saga
+function* rootSaga() {
+  yield all([
+    optionsSaga(),
+    jobSaga(),
+    vehicleDetailsSaga()
+  ]);
+}
+
+// Persist configuration
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['options', 'job'], // Don't persist UI state
+};
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Tạo saga middleware
+// Create saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
-// Tạo Redux store
+// Create store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Bỏ qua các action của redux-persist để tránh lỗi serialization
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
+      serializableCheck: false,
     }).concat(sagaMiddleware),
 });
 
-// Chạy root saga
+// Run saga
 sagaMiddleware.run(rootSaga);
 
-// Tạo persistor
+// Create persistor
 export const persistor = persistStore(store);
 
-// Exports cho TypeScript
+// Types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// Hooks được định kiểu
+// Custom hooks
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector; 
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export default store; 

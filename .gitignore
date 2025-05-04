@@ -44,3 +44,6 @@ yarn.lock
 
 # Project specific
 component-spec-request.md
+
+# Local notes file
+DEVELOPMENT_NOTES.md

@@ -11,6 +11,7 @@ import SessionCardDemo from './components/pages/SessionCardDemo'
 import ReportTimerDemoPage from './components/pages/ReportTimerDemoPage'
 import HomePage from './components/pages/HomePage'
 import VehicleDetailsPage from './components/pages/VehicleDetailsPage'
+import VehicleDetailsRedux from './components/pages/VehicleDetailsRedux'
 import LegendDemo from './components/pages/LegendDemo'
 import LegendCaptionDemo from './components/pages/LegendCaptionDemo'
 import FooterBarDemo from './components/pages/FooterBarDemo'
@@ -23,6 +24,7 @@ import DamageSelectionWithPopup from './components/pages/DamageSelectionWithPopu
 import ReduxDemoPage from './components/pages/ReduxDemoPage'
 import VehicleDamageSelectionRedux from './components/pages/VehicleDamageSelectionRedux'
 import DamageSelectionRedux from './components/pages/DamageSelectionRedux'
+import ClickableImageDemo from './components/pages/ClickableImageDemo'
 import './App.css'
 
 function App() {
@@ -40,6 +42,8 @@ function App() {
           <Route path="/report-timer-demo" element={<ReportTimerDemoPage />} />
           <Route path="/vehicle-details" element={<VehicleDetailsPage />} />
           <Route path="/vehicle-details/:id" element={<VehicleDetailsPage />} />
+          <Route path="/vehicle-details-redux" element={<VehicleDetailsRedux />} />
+          <Route path="/vehicle-details-redux/:id" element={<VehicleDetailsRedux />} />
           <Route path="/legend-demo" element={<LegendDemo />} />
           <Route path="/legend-caption-demo" element={<LegendCaptionDemo />} />
           <Route path="/footer-bar-demo" element={<FooterBarDemo />} />
@@ -52,6 +56,7 @@ function App() {
           <Route path="/damage-selection-redux" element={<DamageSelectionRedux />} />
           <Route path="/redux-demo" element={<ReduxDemoPage />} />
           <Route path="/vehicle-damage-redux" element={<VehicleDamageSelectionRedux />} />
+          <Route path="/clickable-image" element={<ClickableImageDemo />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>

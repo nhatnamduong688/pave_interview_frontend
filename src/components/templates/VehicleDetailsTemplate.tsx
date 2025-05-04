@@ -30,6 +30,11 @@ interface VehicleDetailsTemplateProps {
   images: VehicleImage[];
   onBack?: () => void;
   onReport?: () => void;
+  // Optional props for Redux control
+  activeImageId?: string;
+  isSidebarCollapsed?: boolean;
+  onImageSelect?: (id: string) => void;
+  onToggleSidebar?: () => void;
 }
 
 const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
@@ -37,15 +42,41 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
   vehicleInfo,
   images,
   onBack,
-  onReport
+  onReport,
+  // Redux props with fallbacks
+  activeImageId: propActiveImageId,
+  isSidebarCollapsed: propIsSidebarCollapsed,
+  onImageSelect,
+  onToggleSidebar
 }) => {
-  const [activeImageId, setActiveImageId] = useState<string>(images[0]?.id || '');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  // Local state si không có prop từ Redux
+  const [localActiveImageId, setLocalActiveImageId] = useState<string>(images[0]?.id || '');
+  const [localIsSidebarCollapsed, setLocalIsSidebarCollapsed] = useState<boolean>(false);
+  
+  // Sử dụng props từ Redux nếu có, nếu không dùng local state
+  const activeImageId = propActiveImageId || localActiveImageId;
+  const isSidebarCollapsed = propIsSidebarCollapsed !== undefined ? propIsSidebarCollapsed : localIsSidebarCollapsed;
+  
+  // Xác định active image
   const activeImage = images.find(img => img.id === activeImageId) || images[0];
 
+  // Handler cho sidebar toggle
   const handleCollapseToggle = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    if (onToggleSidebar) {
+      onToggleSidebar();
+    } else {
+      setLocalIsSidebarCollapsed(!localIsSidebarCollapsed);
+    }
     console.log('Sidebar collapsed state:', !isSidebarCollapsed);
+  };
+  
+  // Handler cho image selection
+  const handleImageSelect = (id: string) => {
+    if (onImageSelect) {
+      onImageSelect(id);
+    } else {
+      setLocalActiveImageId(id);
+    }
   };
 
   const toolbarButtons = [
@@ -111,7 +142,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
             <ThumbnailList
               thumbnails={images}
               activeId={activeImageId}
-              onSelect={setActiveImageId}
+              onSelect={handleImageSelect}
             />
           </div>
 
@@ -131,7 +162,7 @@ const VehicleDetailsTemplate: React.FC<VehicleDetailsTemplateProps> = ({
             orientation={vehicleOrientation}
             captionText={captionText}
             extraThumbnails={extraThumbnails}
-            onThumbnailClick={(id) => setActiveImageId(id)}
+            onThumbnailClick={handleImageSelect}
             onToolbarAction={(action) => console.log('Toolbar action:', action)}
           />
         </div>

@@ -5,6 +5,25 @@ import { Link } from 'react-router-dom';
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
+// Component Card được sử dụng trong phần Redux Components
+interface ComponentCardProps {
+  title: string;
+  description: string;
+  path: string;
+}
+
+const ComponentCard: React.FC<ComponentCardProps> = ({ title, description, path }) => (
+  <Card className="h-full shadow-md hover:shadow-lg transition-shadow">
+    <Title level={5} className="mb-2">{title}</Title>
+    <Paragraph className="mb-4 text-sm text-gray-600">{description}</Paragraph>
+    <Link to={path}>
+      <Button type="primary" size="middle" block>
+        View Component
+      </Button>
+    </Link>
+  </Card>
+);
+
 const HomePage: React.FC = () => {
   const demoPages = [
     {
@@ -120,6 +139,38 @@ const HomePage: React.FC = () => {
               </Link>
             </Card>
           ))}
+        </div>
+
+        {/* Section 3: Redux Components */}
+        <div className="mb-8">
+          <Title level={3} className="mb-4">Redux Components</Title>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ComponentCard 
+              title="Redux Demo"
+              description="Basic Redux demonstration page"
+              path="/redux-demo"
+            />
+            <ComponentCard 
+              title="Vehicle Damage Selection (Redux)"
+              description="SVG-based vehicle damage selection with Redux"
+              path="/vehicle-damage-redux"
+            />
+            <ComponentCard 
+              title="Damage Selection (Redux)"
+              description="Redux version of damage selection form"
+              path="/damage-selection-redux"
+            />
+            <ComponentCard 
+              title="Vehicle Details (Redux)" 
+              description="Redux version of vehicle details page"
+              path="/vehicle-details-redux"
+            />
+            <ComponentCard 
+              title="Clickable Image" 
+              description="Interactive image with click-to-add indicators stored in Redux"
+              path="/clickable-image"
+            />
+          </div>
         </div>
       </Content>
     </Layout>
