@@ -39,7 +39,7 @@ function* rootSaga() {
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['options', 'job'], // Don't persist UI state
+  whitelist: ['options', 'job', 'clickIndicator'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -56,11 +56,16 @@ export const store = configureStore({
     }).concat(sagaMiddleware),
 });
 
+// Log initial state after store creation
+console.log('Initial Redux Store State:', store.getState());
+
 // Run saga
 sagaMiddleware.run(rootSaga);
 
 // Create persistor
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, null, () => {
+  console.log('Redux store rehydrated:', store.getState());
+});
 
 // Types
 export type RootState = ReturnType<typeof store.getState>;

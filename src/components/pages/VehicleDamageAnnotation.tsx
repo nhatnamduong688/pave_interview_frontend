@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Layout, Typography, Button, notification } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -7,7 +7,9 @@ import ThumbnailList from '../molecules/ThumbnailList';
 import CustomAnnotationFooter from '../molecules/CustomAnnotationFooter';
 import InteractiveImageViewer from '../molecules/InteractiveImageViewer';
 import AnnotationList from '../molecules/AnnotationList';
+import SimplePopup from '../molecules/SimplePopup';
 import { Tag } from '../molecules/SessionCard/SessionTag';
+import usePositionedPopup from '../../hooks/usePositionedPopup';
 
 // Redux actions và selectors
 import {
@@ -85,7 +87,14 @@ const VehicleDamageAnnotation: React.FC = () => {
   
   // Local state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
-  const [isAnnotationMode, setIsAnnotationMode] = useState<boolean>(false);
+  const [isAnnotationMode, setIsAnnotationMode] = useState<boolean>(true);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  
+  // Ref cho image container để lấy kích thước và vị trí
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Sử dụng hook usePositionedPopup để quản lý vị trí popup
+  const { popupPosition, calculatePopupPosition, clearPopupPosition, popupRef } = usePositionedPopup();
   
   // Set active image on component mount if not already set
   useEffect(() => {
@@ -101,15 +110,60 @@ const VehicleDamageAnnotation: React.FC = () => {
   const handleImageClick = (x: number, y: number) => {
     if (!isAnnotationMode || !activeImageId) return;
     
+    // Đảm bảo tọa độ nằm trong phạm vi hợp lệ (0-100%)
+    if (x < 0 || x > 100 || y < 0 || y > 100) {
+      console.log('Tọa độ nằm ngoài phạm vi hợp lệ của hình ảnh:', x, y);
+      return;
+    }
+    
+    // Thêm indicator vào Redux store
     dispatch(addIndicator({ imageId: activeImageId, x, y }));
-    // Optionally deactivate annotation mode after adding
-    // setIsAnnotationMode(false);
+    
+    // Hiển thị popup tại vị trí indicator
+    if (imageContainerRef.current) {
+      const rect = imageContainerRef.current.getBoundingClientRect();
+      const pixelX = rect.left + (rect.width * x / 100);
+      const pixelY = rect.top + (rect.height * y / 100);
+      
+      // Tính toán vị trí cho popup
+      calculatePopupPosition(pixelX, pixelY, window.innerWidth, window.innerHeight, {
+        indicatorSize: 24, // Kích thước indicator dot
+        gap: 20, // Giảm khoảng cách xuống còn 20px (trước đây là 36px)
+        padding: 20 // Padding từ mép màn hình
+      });
+      
+      // Hiển thị popup
+      setShowPopup(true);
+    }
   };
   
   const handleIndicatorClick = (id: string) => {
     if (activeImageId) {
       dispatch(selectIndicator({ imageId: activeImageId, indicatorId: id }));
+      
+      // Tìm indicator được chọn để hiển thị popup
+      const indicator = indicators.find(i => i.id === id);
+      if (indicator && imageContainerRef.current) {
+        const rect = imageContainerRef.current.getBoundingClientRect();
+        const pixelX = rect.left + (rect.width * indicator.x / 100);
+        const pixelY = rect.top + (rect.height * indicator.y / 100);
+        
+        // Tính toán vị trí cho popup
+        calculatePopupPosition(pixelX, pixelY, window.innerWidth, window.innerHeight, {
+          indicatorSize: 24,
+          gap: 20, // Giảm khoảng cách xuống còn 20px
+          padding: 20
+        });
+        
+        // Hiển thị popup
+        setShowPopup(true);
+      }
     }
+  };
+  
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    clearPopupPosition();
   };
   
   const handleRemoveIndicator = (id: string) => {
@@ -251,20 +305,51 @@ const VehicleDamageAnnotation: React.FC = () => {
             />
           </div>
 
-          {/* Main Viewer with annotation capability */}
-          <div className="flex-1 overflow-auto flex items-center justify-center py-2">
+          {/* Main Image Viewer */}
+          <div 
+            ref={imageContainerRef}
+            className="flex-1 flex justify-center items-center relative h-full px-4 py-2"
+          >
             <InteractiveImageViewer
               src={activeImage?.src || ''}
-              alt={activeImage?.alt}
+              alt={activeImage?.alt || ''}
               indicators={indicators}
               isInteractionEnabled={isAnnotationMode}
               onImageClick={handleImageClick}
               onIndicatorClick={handleIndicatorClick}
             />
+            
+            {/* Popup được định vị bởi usePositionedPopup */}
+            {showPopup && popupPosition && (
+              <div 
+                className="absolute animate-popup-appear" 
+                style={{
+                  left: `${popupPosition.popupLeft}px`,
+                  top: `${popupPosition.popupTop}px`,
+                  zIndex: 40,
+                  margin: 0,
+                  padding: 0,
+                  border: 'none',
+                  filter: 'none',
+                  transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                  transformOrigin: popupPosition.arrowPosition === 'left' ? 'left center' : 
+                                  popupPosition.arrowPosition === 'right' ? 'right center' : 
+                                  popupPosition.arrowPosition === 'top' ? 'center top' : 'center bottom'
+                }}
+              >
+                <SimplePopup
+                  ref={popupRef}
+                  title="Thông tin hư hỏng"
+                  message={`Đây là thông tin hư hỏng của xe ${sessionId} tại vị trí này. Bạn có thể thêm chi tiết.`}
+                  arrowPosition={popupPosition.arrowPosition}
+                  onClose={handleClosePopup}
+                />
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Footer with annotation controls - using new CustomAnnotationFooter */}
+        {/* Footer with annotation controls - using CustomAnnotationFooter */}
         <div className="flex-none border-t border-gray-200">
           <CustomAnnotationFooter
             captionText={captionText}
@@ -277,15 +362,63 @@ const VehicleDamageAnnotation: React.FC = () => {
         </div>
       </div>
 
-      {/* Sidebar Right - Full height with fixed footer - Position absolute to allow main content to expand */}
-      <div className={`absolute top-0 right-0 w-[300px] h-full flex flex-col border-l border-gray-200 bg-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
-        {/* Annotation list */}
-        <AnnotationList
-          indicators={indicators}
-          onIndicatorClick={handleIndicatorClick}
-          onRemoveIndicator={handleRemoveIndicator}
-          onResetAllIndicators={handleResetCurrentImage}
-        />
+      {/* Sidebar Right - Annotation List */}
+      <div className={`absolute top-0 right-0 w-[300px] h-full flex flex-col border-l border-gray-200 bg-white shadow-md transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex justify-between items-center mb-4">
+            <Title level={4} className="!mb-0">Annotations</Title>
+            <Button 
+              type="text" 
+              size="small" 
+              onClick={handleCollapseToggle}
+            >
+              →
+            </Button>
+          </div>
+          
+          {/* Annotation Mode Toggle */}
+          <div className="mb-4">
+            <Button
+              type={isAnnotationMode ? "primary" : "default"}
+              onClick={handleToggleAnnotationMode}
+              className="mr-2"
+            >
+              📌 Annotate
+            </Button>
+            <Button
+              type={!isAnnotationMode ? "primary" : "default"}
+              onClick={handleToggleAnnotationMode}
+            >
+              ↕️ Move
+            </Button>
+          </div>
+          
+          {/* Annotation List */}
+          <AnnotationList
+            indicators={indicators}
+            onIndicatorClick={handleIndicatorClick}
+            onRemoveIndicator={handleRemoveIndicator}
+            onResetAllIndicators={handleResetCurrentImage}
+          />
+        </div>
+        
+        {/* Clear buttons at the bottom */}
+        <div className="flex-none p-4 border-t border-gray-200">
+          <Button 
+            danger 
+            onClick={handleResetCurrentImage}
+            className="w-full mb-2"
+          >
+            Clear Current Image
+          </Button>
+          <Button 
+            danger 
+            onClick={handleResetAllImages}
+            className="w-full"
+          >
+            Clear All Images
+          </Button>
+        </div>
       </div>
     </div>
   );

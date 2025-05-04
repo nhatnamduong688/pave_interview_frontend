@@ -93,4 +93,4 @@ export type DamageTypeOption = typeof initialData.options.damageTypeOptions[0];
 export type SeverityOption = typeof initialData.options.severityOptions[0];
 export type Photo = typeof initialData.job.photos[0];
 export type Annotation = typeof initialData.job.photos[0].annotations[0];
-export type AnnotationInProgress = typeof initialData.ui.annotationInProgress; 
+export type AnnotationInProgress = typeof initialData.ui.annotationInProgress;

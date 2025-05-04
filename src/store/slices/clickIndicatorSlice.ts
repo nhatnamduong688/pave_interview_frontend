@@ -59,10 +59,14 @@ const clickIndicatorSlice = createSlice({
   reducers: {
     // Thiết lập ảnh đang active
     setActiveImage: (state, action: PayloadAction<string>) => {
+      console.log('Setting active image:', action.payload);
       state.activeImageId = action.payload;
       // Ensure that the image has an entry in the indicators map
       if (!state.indicatorsByImage[action.payload]) {
+        console.log('Creating empty indicators array for image:', action.payload);
         state.indicatorsByImage[action.payload] = [];
+      } else {
+        console.log('Image already has indicators:', state.indicatorsByImage[action.payload]);
       }
       // Clear selection when changing images
       state.selectedIndicatorId = null;
@@ -87,9 +91,11 @@ const clickIndicatorSlice = createSlice({
       throughPaint?: boolean;
     }>) => {
       const { imageId, x, y, damageType, component, color, confirmed, severity, throughPaint } = action.payload;
+      console.log('Adding indicator to image:', imageId, 'at position:', x, y);
       
       // Ensure the image has an entry
       if (!state.indicatorsByImage[imageId]) {
+        console.log('Creating entry for image before adding indicator');
         state.indicatorsByImage[imageId] = [];
       }
       
@@ -107,6 +113,7 @@ const clickIndicatorSlice = createSlice({
       };
       
       state.indicatorsByImage[imageId].push(newIndicator);
+      console.log('Indicator added, new count:', state.indicatorsByImage[imageId].length);
     },
     
     // Chọn một indicator

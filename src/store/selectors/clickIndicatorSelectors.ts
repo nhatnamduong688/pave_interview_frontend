@@ -9,7 +9,16 @@ export const selectIndicatorsByImage = (state: RootState) => state.clickIndicato
 export const selectActiveImageIndicators = (state: RootState) => {
   const activeImageId = selectActiveImageId(state);
   const indicatorsByImage = selectIndicatorsByImage(state);
-  return activeImageId && indicatorsByImage[activeImageId] ? indicatorsByImage[activeImageId] : [];
+  
+  console.log('Active Image ID:', activeImageId);
+  console.log('Indicators By Image:', indicatorsByImage);
+  
+  const indicators = activeImageId && indicatorsByImage[activeImageId] 
+    ? indicatorsByImage[activeImageId] 
+    : [];
+  
+  console.log('Selected Indicators:', indicators);
+  return indicators;
 };
 
 // Selector để lấy indicators cho một ảnh cụ thể

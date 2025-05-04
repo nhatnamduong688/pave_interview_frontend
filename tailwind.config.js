@@ -8,7 +8,17 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        'popup-appear': 'popupAppear 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      },
+      keyframes: {
+        popupAppear: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+    },
   },
   plugins: [],
   safelist: [
