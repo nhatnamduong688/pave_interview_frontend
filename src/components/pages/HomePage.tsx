@@ -27,6 +27,12 @@ const ComponentCard: React.FC<ComponentCardProps> = ({ title, description, path 
 const HomePage: React.FC = () => {
   const demoPages = [
     {
+      title: 'Vehicle Damage Annotation',
+      description: 'Complete vehicle damage annotation feature with click-to-add markers on multiple images. State management with Redux.',
+      path: '/vehicle-damage-annotation',
+      highlight: true,
+    },
+    {
       title: 'Vehicle Damage Selection (Redux)',
       description: 'Demo của Vehicle Damage Selection sử dụng Redux để quản lý state.',
       path: '/vehicle-damage-redux',
@@ -145,6 +151,11 @@ const HomePage: React.FC = () => {
         <div className="mb-8">
           <Title level={3} className="mb-4">Redux Components</Title>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ComponentCard 
+              title="Vehicle Damage Annotation"
+              description="Complete vehicle damage annotation feature with image markers and interactive UI"
+              path="/vehicle-damage-annotation"
+            />
             <ComponentCard 
               title="Redux Demo"
               description="Basic Redux demonstration page"
