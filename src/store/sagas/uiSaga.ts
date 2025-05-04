@@ -2,7 +2,7 @@ import { takeLatest, select, put, call } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { 
   selectPhoto, completeAnnotation, cancelAnnotation, 
-  startAnnotation, updateAnnotationInProgress 
+  startAnnotation, updateAnnotationInProgress, selectAnnotation
 } from '../slices/uiSlice';
 import { selectAnnotationInProgress, selectIsAnnotationValid } from '../selectors/uiSelectors';
 import { addAnnotation } from '../slices/jobSlice';
@@ -44,8 +44,19 @@ function* handleSelectPhoto(action: PayloadAction<string>) {
 
 // Saga xử lý khi bắt đầu tạo annotation
 function* handleStartAnnotation(action: PayloadAction<{ photoId: string }>) {
+  // Khi bắt đầu tạo annotation mới, bỏ chọn annotation hiện tại nếu có
+  yield put(selectAnnotation(null));
+  
   // Log hoạt động (có thể mở rộng thêm)
   console.log('Bắt đầu tạo annotation mới', action.payload);
+}
+
+// Saga xử lý khi chọn một annotation
+function* handleSelectAnnotation(action: PayloadAction<string | null>) {
+  // Khi chọn annotation, hủy quá trình tạo annotation mới nếu có
+  if (action.payload !== null) {
+    yield put(cancelAnnotation());
+  }
 }
 
 // Root saga cho UI
@@ -54,4 +65,5 @@ export function* uiSaga() {
   yield takeLatest(completeAnnotation.type, handleCompleteAnnotation);
   yield takeLatest(selectPhoto.type, handleSelectPhoto);
   yield takeLatest(startAnnotation.type, handleStartAnnotation);
+  yield takeLatest(selectAnnotation.type, handleSelectAnnotation);
 } 
