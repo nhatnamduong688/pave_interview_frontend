@@ -283,14 +283,95 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
   const getPositionStyle = () => {
     if (!position) return {};
     
-    // Sử dụng vị trí tương đối trong main view, thêm một chút offset để không che điểm annotation
-    return {
+    // Đặt form ngay cạnh indicator, thích ứng với vị trí
+    const isRightSide = position.x > 50;
+    const isTopSide = position.y < 25; // Gần top
+    const isBottomSide = position.y > 75; // Gần bottom
+    
+    // Xác định vị trí hiển thị
+    let positionStyle: any = {
       position: 'absolute' as const,
-      left: `${position.x + 5}%`,
-      top: `${position.y - 5}%`,
-      transform: 'translate(0, -50%)',
       zIndex: 1000,
     };
+    
+    // Xử lý vị trí theo trục X
+    if (isRightSide) {
+      positionStyle.right = `calc(100% - ${position.x}% + 30px)`;
+    } else {
+      positionStyle.left = `calc(${position.x}% + 30px)`;
+    }
+    
+    // Xử lý vị trí theo trục Y
+    if (isTopSide) {
+      // Nếu ở gần top, hiển thị popup bên dưới
+      positionStyle.top = `calc(${position.y}% + 15px)`;
+      positionStyle.transform = 'none';
+    } else if (isBottomSide) {
+      // Nếu ở gần bottom, hiển thị popup bên trên
+      positionStyle.bottom = `calc(100% - ${position.y}% + 15px)`;
+      positionStyle.transform = 'none';
+    } else {
+      // Vị trí mặc định
+      positionStyle.top = `${position.y}%`;
+      positionStyle.transform = 'translateY(-50%)';
+    }
+    
+    return positionStyle;
+  };
+  
+  // Xác định vị trí mũi tên
+  const getArrowStyle = () => {
+    if (!position) return {};
+    
+    const isRightSide = position.x > 50;
+    const isTopSide = position.y < 25;
+    const isBottomSide = position.y > 75;
+    
+    // Style cơ bản
+    let arrowStyle: any = {
+      zIndex: 999,
+    };
+    
+    // Xử lý vị trí theo trục X
+    if (isRightSide) {
+      arrowStyle.right = '-6px';
+    } else {
+      arrowStyle.left = '-6px';
+    }
+    
+    // Xử lý vị trí và góc xoay theo trục Y
+    if (isTopSide) {
+      // Mũi tên ở trên, chỉ xuống
+      arrowStyle.top = '-6px';
+      arrowStyle.transform = 'rotate(135deg)';
+      arrowStyle.borderBottom = 'none';
+      arrowStyle.borderRight = isRightSide ? 'none' : '';
+      arrowStyle.borderLeft = isRightSide ? '' : 'none';
+      arrowStyle.borderTop = '';
+    } else if (isBottomSide) {
+      // Mũi tên ở dưới, chỉ lên
+      arrowStyle.bottom = '-6px';
+      arrowStyle.transform = 'rotate(-45deg)';
+      arrowStyle.borderTop = 'none';
+      arrowStyle.borderRight = isRightSide ? 'none' : '';
+      arrowStyle.borderLeft = isRightSide ? '' : 'none';
+      arrowStyle.borderBottom = '';
+    } else {
+      // Mũi tên bên trái/phải
+      arrowStyle.top = '50%';
+      arrowStyle.transform = 'translateY(-50%) rotate(45deg)';
+      
+      // Xử lý border để tạo mũi tên trái/phải
+      if (isRightSide) {
+        arrowStyle.borderLeft = 'none';
+        arrowStyle.borderBottom = 'none';
+      } else {
+        arrowStyle.borderRight = 'none';
+        arrowStyle.borderTop = 'none';
+      }
+    }
+    
+    return arrowStyle;
   };
   
   const showCheckmarks = type === 'damageType';
@@ -303,9 +384,17 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
         ...getPositionStyle()
       }}
     >
+      {/* Arrow pointer */}
+      <div 
+        className="absolute w-3 h-3 bg-white transform border border-gray-200"
+        style={{
+          ...getArrowStyle()
+        }}
+      />
+      
       {/* Popup */}
       <div 
-        className="bg-white rounded-md shadow-lg border border-gray-200 w-[250px]"
+        className="bg-white rounded-md shadow-lg border border-gray-200 w-[230px]"
         style={{ 
           pointerEvents: 'auto' as const 
         }}
