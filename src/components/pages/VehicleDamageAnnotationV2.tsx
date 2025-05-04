@@ -15,6 +15,7 @@ import { useOptionsData } from '../../hooks/useOptionsData';
 
 // Custom UI components
 import EnhancedSelectorPopup from '../annotations/EnhancedSelectorPopup';
+import EnhancedSelectorPopupRedux from '../annotations/EnhancedSelectorPopupRedux';
 import SelectorPanel from '../annotations/SelectorPanel';
 import AnnotationPanel from '../annotations/AnnotationPanel';
 
@@ -239,22 +240,20 @@ const VehicleDamageAnnotationV2: React.FC = () => {
             
             {/* Annotation Popup - Phiên bản mới với cả 3 loại lựa chọn */}
             {pendingAnnotation && (
-              <EnhancedSelectorPopup
-                damageTypeOptions={damageTypeOptions}
-                componentOptions={componentTypes}
-                materialOptions={materialTypes}
-                selectedDamageType={tempDamageType}
-                selectedComponent={tempComponent}
-                selectedMaterial={tempMaterial}
-                onSelectDamageType={handlePopupDamageTypeSelect}
-                onSelectComponent={handlePopupComponentSelect}
-                onSelectMaterial={handlePopupMaterialSelect}
+              <EnhancedSelectorPopupRedux
                 onCancel={onPopupCancel}
                 onConfirm={onPopupComponentConfirm}
-                severity={severity}
-                throughPaint={throughPaint}
-                onSeverityChange={handleSeverityChange}
-                onThroughPaintToggle={handleThroughPaintToggle}
+                tempIndicator={{
+                  ...(tempIndicator ? tempIndicator : {}),
+                  x: pendingAnnotation.x,
+                  y: pendingAnnotation.y,
+                  color: tempIndicator?.color || '#ef4444',
+                  damageType: tempDamageType || undefined,
+                  component: tempComponent || undefined,
+                  material: tempMaterial || undefined,
+                  severity: severity,
+                  throughPaint: throughPaint
+                }}
                 position={pendingAnnotation}
               />
             )}

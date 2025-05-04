@@ -10,6 +10,7 @@ export interface Indicator {
   isHighlighted?: boolean;
   damageType?: string;
   component?: string;
+  material?: string;
   confirmed?: boolean;
   severity?: string;
   throughPaint?: boolean;
@@ -81,12 +82,13 @@ const clickIndicatorSlice = createSlice({
       y: number;
       damageType?: string;
       component?: string;
+      material?: string;
       color?: string;
       confirmed?: boolean;
       severity?: string;
       throughPaint?: boolean;
     }>) => {
-      const { imageId, x, y, damageType, component, color, confirmed, severity, throughPaint } = action.payload;
+      const { imageId, x, y, damageType, component, material, color, confirmed, severity, throughPaint } = action.payload;
       
       // Ensure the image has an entry
       if (!state.indicatorsByImage[imageId]) {
@@ -101,6 +103,7 @@ const clickIndicatorSlice = createSlice({
         isHighlighted: false,
         damageType,
         component,
+        material,
         confirmed,
         severity,
         throughPaint
