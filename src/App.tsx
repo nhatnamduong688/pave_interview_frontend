@@ -26,6 +26,7 @@ import VehicleDamageSelectionRedux from './components/pages/VehicleDamageSelecti
 import DamageSelectionRedux from './components/pages/DamageSelectionRedux'
 import ClickableImageDemo from './components/pages/ClickableImageDemo'
 import VehicleDamageAnnotation from './components/pages/VehicleDamageAnnotation'
+import VehicleDamageAnnotationV2 from './components/pages/VehicleDamageAnnotationV2'
 import './App.css'
 
 function App() {
@@ -60,6 +61,8 @@ function App() {
           <Route path="/clickable-image" element={<ClickableImageDemo />} />
           <Route path="/vehicle-damage-annotation" element={<VehicleDamageAnnotation />} />
           <Route path="/vehicle-damage-annotation/:id" element={<VehicleDamageAnnotation />} />
+          <Route path="/vehicle-damage-annotation-v2" element={<VehicleDamageAnnotationV2 />} />
+          <Route path="/vehicle-damage-annotation-v2/:id" element={<VehicleDamageAnnotationV2 />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
