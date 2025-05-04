@@ -144,6 +144,7 @@ export const useVehicleAnnotation = ({ initialImages }: UseVehicleAnnotationProp
     y: number;
     damageType: string;
     component: string;
+    material?: string;
     color: string;
     severity: string;
     throughPaint: boolean;
@@ -152,7 +153,7 @@ export const useVehicleAnnotation = ({ initialImages }: UseVehicleAnnotationProp
     componentLabel?: string;
   }) => {
     const { 
-      imageId, x, y, damageType, component, color, 
+      imageId, x, y, damageType, component, material, color, 
       severity, throughPaint, indicatorId,
       damageTypeLabel, componentLabel
     } = annotationData;
@@ -165,6 +166,7 @@ export const useVehicleAnnotation = ({ initialImages }: UseVehicleAnnotationProp
         updates: {
           damageType,
           component,
+          material,
           color,
           confirmed: true,
           severity,
@@ -184,6 +186,7 @@ export const useVehicleAnnotation = ({ initialImages }: UseVehicleAnnotationProp
         y, 
         damageType,
         component,
+        material,
         color,
         confirmed: true,
         severity,

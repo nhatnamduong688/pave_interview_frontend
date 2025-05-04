@@ -18,6 +18,9 @@ import EnhancedSelectorPopup from '../annotations/EnhancedSelectorPopup';
 import SelectorPanel from '../annotations/SelectorPanel';
 import AnnotationPanel from '../annotations/AnnotationPanel';
 
+// Import thêm MaterialOptions từ useOptionsData
+import { DamageTypeOption, ComponentType, MaterialType } from '../../hooks/useOptionsData';
+
 const { Content } = Layout;
 
 // Mock vehicle data
@@ -103,6 +106,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   const {
     damageTypeOptions,
     componentTypes,
+    materialTypes,
     toolbarButtons
   } = useOptionsData(isAnnotationMode);
   
@@ -111,16 +115,20 @@ const VehicleDamageAnnotationV2: React.FC = () => {
     activePopup,
     tempDamageType,
     tempComponent,
+    tempMaterial,
     severity,
     throughPaint,
     pendingAnnotation,
     selectedDamageTypes,
     activeDamageType,
     activeComponent,
+    activeMaterial,
     handleSelectDamageType,
     handleSelectComponent,
+    handleSelectMaterial,
     handlePopupDamageTypeSelect,
     handlePopupComponentSelect,
+    handlePopupMaterialSelect,
     handlePopupCancel,
     handlePopupDamageTypeConfirm,
     handleSeverityChange,
@@ -229,42 +237,25 @@ const VehicleDamageAnnotationV2: React.FC = () => {
               />
             )}
             
-            {/* Damage Type Popup */}
-            {activePopup === 'damageType' && pendingAnnotation && (
+            {/* Annotation Popup - Phiên bản mới với cả 3 loại lựa chọn */}
+            {pendingAnnotation && (
               <EnhancedSelectorPopup
-                title="DAMAGE TYPE"
-                options={damageTypeOptions}
-                selectedOption={tempDamageType}
-                onSelect={handlePopupDamageTypeSelect}
+                damageTypeOptions={damageTypeOptions}
+                componentOptions={componentTypes}
+                materialOptions={materialTypes}
+                selectedDamageType={tempDamageType}
+                selectedComponent={tempComponent}
+                selectedMaterial={tempMaterial}
+                onSelectDamageType={handlePopupDamageTypeSelect}
+                onSelectComponent={handlePopupComponentSelect}
+                onSelectMaterial={handlePopupMaterialSelect}
                 onCancel={onPopupCancel}
-                onConfirm={handlePopupDamageTypeConfirm}
-                showSearch={true}
-                showSeverity={true}
-                showThroughPaint={true}
+                onConfirm={onPopupComponentConfirm}
                 severity={severity}
                 throughPaint={throughPaint}
                 onSeverityChange={handleSeverityChange}
                 onThroughPaintToggle={handleThroughPaintToggle}
                 position={pendingAnnotation}
-                type="damageType"
-                selectedItems={selectedDamageTypes}
-              />
-            )}
-            
-            {/* Component Popup */}
-            {activePopup === 'component' && pendingAnnotation && (
-              <EnhancedSelectorPopup
-                title="COMPONENT"
-                options={componentTypes}
-                selectedOption={tempComponent}
-                onSelect={handlePopupComponentSelect}
-                onCancel={onPopupCancel}
-                onConfirm={onPopupComponentConfirm}
-                showSearch={true}
-                showSeverity={false}
-                showThroughPaint={false}
-                position={pendingAnnotation}
-                type="component"
               />
             )}
           </div>

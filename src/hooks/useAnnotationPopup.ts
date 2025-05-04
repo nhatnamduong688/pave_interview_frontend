@@ -20,6 +20,7 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
   const [activePopup, setActivePopup] = useState<'damageType' | 'component' | null>(null);
   const [tempDamageType, setTempDamageType] = useState<string | null>(null);
   const [tempComponent, setTempComponent] = useState<string | null>(null);
+  const [tempMaterial, setTempMaterial] = useState<string | null>(null);
   const [editingIndicatorId, setEditingIndicatorId] = useState<string | null>(null);
   const [severity, setSeverity] = useState<string>('maj');
   const [throughPaint, setThroughPaint] = useState<boolean>(false);
@@ -27,6 +28,10 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
   const [selectedDamageTypes, setSelectedDamageTypes] = useState<string[]>([]);
   const [activeDamageType, setActiveDamageType] = useState(damageTypeOptions[0]);
   const [activeComponent, setActiveComponent] = useState(componentTypes[0]);
+  
+  // Material options - dùng tạm một phần của component types
+  const materialOptions = componentTypes.slice(0, 3);
+  const [activeMaterial, setActiveMaterial] = useState(materialOptions[0]);
 
   // Handler for selecting damage type
   const handleSelectDamageType = (damageTypeId: string) => {
@@ -41,6 +46,14 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     const component = componentTypes.find(c => c.id === componentId);
     if (component) {
       setActiveComponent(component);
+    }
+  };
+  
+  // Handler for selecting material
+  const handleSelectMaterial = (materialId: string) => {
+    const material = materialOptions.find(m => m.id === materialId);
+    if (material) {
+      setActiveMaterial(material);
     }
   };
   
@@ -59,10 +72,15 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     setTempComponent(id);
   };
   
+  const handlePopupMaterialSelect = (id: string) => {
+    setTempMaterial(id);
+  };
+  
   const handlePopupCancel = (resetTempIndicator: () => void) => {
     // Reset temp values and close popup
     setTempDamageType(null);
     setTempComponent(null);
+    setTempMaterial(null);
     setActivePopup(null);
     setEditingIndicatorId(null);
     setPendingAnnotation(null);
@@ -89,10 +107,10 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     // Initialize popup values
     setTempDamageType(defaultDamageType.id);
     setTempComponent(null);
+    setTempMaterial(null);
     setSeverity('maj');
     setThroughPaint(false);
     setSelectedDamageTypes([defaultDamageType.id]);
-    setActivePopup('damageType');
     setEditingIndicatorId(null);
   };
 
@@ -102,6 +120,7 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
       setEditingIndicatorId(indicator.id);
       setTempDamageType(indicator.damageType || null);
       setTempComponent(indicator.component || null);
+      setTempMaterial(null);
       setSeverity(indicator.severity || 'maj');
       setThroughPaint(indicator.throughPaint || false);
       
@@ -110,9 +129,6 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
       
       // Set position for popup using the indicator's coordinates
       setPendingAnnotation({ x: indicator.x, y: indicator.y });
-      
-      // Show damage type popup first
-      setActivePopup('damageType');
     }
   };
 
@@ -127,6 +143,7 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     return {
       damageType: tempDamageType,
       component: tempComponent,
+      material: tempMaterial || undefined,
       color: damageType.color,
       severity,
       throughPaint,
@@ -141,6 +158,7 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
   const resetPopupState = () => {
     setTempDamageType(null);
     setTempComponent(null);
+    setTempMaterial(null);
     setActivePopup(null);
     setEditingIndicatorId(null);
     setPendingAnnotation(null);
@@ -152,6 +170,7 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     activePopup,
     tempDamageType,
     tempComponent,
+    tempMaterial,
     editingIndicatorId,
     severity,
     throughPaint,
@@ -159,13 +178,16 @@ export const useAnnotationPopup = ({ damageTypeOptions, componentTypes }: UseAnn
     selectedDamageTypes,
     activeDamageType,
     activeComponent,
+    activeMaterial,
     
     // Actions
     setActivePopup,
     handleSelectDamageType,
     handleSelectComponent,
+    handleSelectMaterial,
     handlePopupDamageTypeSelect,
     handlePopupComponentSelect,
+    handlePopupMaterialSelect,
     handlePopupCancel,
     handlePopupDamageTypeConfirm,
     handleSeverityChange,
