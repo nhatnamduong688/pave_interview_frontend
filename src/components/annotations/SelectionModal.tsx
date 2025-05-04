@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface OptionItem {
   id: string;
   label: string;
   value?: string;
+  color?: string;
 }
 
 interface SelectionModalProps {
@@ -13,6 +14,7 @@ interface SelectionModalProps {
   onClose: () => void;
   showSearch?: boolean;
   selectedIds?: string[];
+  keyboardShortcuts?: boolean;
 }
 
 const SelectionModal: React.FC<SelectionModalProps> = ({
@@ -21,11 +23,13 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
   onSelect,
   onClose,
   showSearch = true,
-  selectedIds = []
+  selectedIds = [],
+  keyboardShortcuts = false
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredOptionId, setHoveredOptionId] = useState<string | null>(null);
   const [localSelectedIds, setLocalSelectedIds] = useState<string[]>(selectedIds);
+  const modalRef = useRef<HTMLDivElement>(null);
   
   // Filter options based on search query
   const filteredOptions = searchQuery 
@@ -43,20 +47,55 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
     onSelect(newSelectedIds); // Automatically apply changes when selecting
   };
   
-  // Use Escape key to close modal
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+  // Keyboard event handler
+  const handleKeyDown = (e: KeyboardEvent) => {
+    // Always handle Escape key to close modal
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+      return;
+    }
     
+    // Only process number shortcuts if keyboard shortcuts are enabled
+    if (keyboardShortcuts) {
+      // Check if key is a number between 1-9
+      const num = parseInt(e.key);
+      if (!isNaN(num) && num >= 1 && num <= 9) {
+        e.preventDefault();
+        const index = num - 1;
+        if (index < filteredOptions.length) {
+          handleToggleOption(filteredOptions[index].id);
+        }
+      }
+      
+      // Handle letter shortcuts (first letter of option)
+      if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
+        const letter = e.key.toLowerCase();
+        const matchingOption = filteredOptions.find(option => 
+          option.label.toLowerCase().startsWith(letter)
+        );
+        if (matchingOption) {
+          handleToggleOption(matchingOption.id);
+        }
+      }
+    }
+  };
+  
+  // Set up keyboard event listeners
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
+    
+    // Focus the modal for keyboard accessibility
+    if (modalRef.current) {
+      modalRef.current.focus();
+    }
+    
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [filteredOptions, keyboardShortcuts]);
   
   return (
     <div 
+      ref={modalRef}
       className="bg-white rounded-lg shadow-md overflow-hidden"
       style={{
         width: '300px',
@@ -66,6 +105,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
         borderRadius: '8px',
         boxShadow: '0px 3px 4px -2px rgba(0, 0, 0, 0.1)'
       }}
+      tabIndex={0} // Make focusable for keyboard navigation
     >
       {/* Header with title only */}
       <div className="px-3 py-1">
@@ -144,6 +184,13 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
           );
         })}
       </div>
+      
+      {/* Keyboard shortcuts hint */}
+      {keyboardShortcuts && filteredOptions.length > 0 && (
+        <div className="px-3 py-1 text-xs text-gray-500 border-t border-gray-100 font-mono">
+          Press [1-9] to select options
+        </div>
+      )}
     </div>
   );
 };

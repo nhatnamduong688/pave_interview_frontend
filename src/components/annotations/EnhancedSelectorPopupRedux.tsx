@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { updateIndicator, addIndicator } from '../../store/slices/clickIndicatorSlice';
 import {
@@ -110,6 +110,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
   position
 }) => {
   const dispatch = useAppDispatch();
+  const formRef = useRef<HTMLDivElement>(null);
   
   // Redux selectors
   const activeImageId = useAppSelector(selectActiveImageId);
@@ -330,7 +331,60 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
       onCancel();
     }
   };
+
+  // Handle keyboard shortcuts
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    // Only process shortcuts when form is active/focused
+    if (!formRef.current || !document.activeElement || 
+        !formRef.current.contains(document.activeElement)) {
+      return;
+    }
     
+    // Prevent default browser actions for our shortcuts
+    switch (e.key.toLowerCase()) {
+      case 'p':
+        e.preventDefault();
+        setActiveModal(activeModal === 'component' ? null : 'component');
+        break;
+      case 'm':
+        e.preventDefault();
+        setActiveModal(activeModal === 'material' ? null : 'material');
+        break;
+      case 'd':
+        e.preventDefault();
+        setActiveModal(activeModal === 'damageType' ? null : 'damageType');
+        break;
+      case 'enter':
+        e.preventDefault();
+        if (isFormValid) {
+          handleConfirm();
+        }
+        break;
+      case 'escape':
+        e.preventDefault();
+        if (activeModal) {
+          setActiveModal(null);
+        } else {
+          onCancel();
+        }
+        break;
+    }
+  }, [activeModal, isFormValid]);
+
+  // Register global keyboard event listener
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // Give focus to the form container for keyboard accessibility
+    if (formRef.current) {
+      formRef.current.focus();
+    }
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   return (
     <>
       {/* Indicator dot */}
@@ -355,6 +409,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
         }}
       >
         <div 
+          ref={formRef}
           className="bg-white rounded-lg shadow-md overflow-hidden"
           style={{
             width: '350px',
@@ -364,6 +419,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             flexDirection: 'column',
             alignItems: 'flex-start'
           }}
+          tabIndex={0} // Make div focusable for keyboard shortcuts
         >
           <div className="p-2 space-y-1 w-full">
             {/* Component Selector */}
@@ -512,6 +568,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                   onSelect={setSelectedComponents}
                   onClose={() => setActiveModal(null)}
                   selectedIds={selectedComponents}
+                  keyboardShortcuts={true}
                 />
               )}
               
@@ -522,6 +579,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                   onSelect={setSelectedMaterials}
                   onClose={() => setActiveModal(null)}
                   selectedIds={selectedMaterials}
+                  keyboardShortcuts={true}
                 />
               )}
               
@@ -532,6 +590,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                   onSelect={setSelectedDamageTypes}
                   onClose={() => setActiveModal(null)}
                   selectedIds={selectedDamageTypes}
+                  keyboardShortcuts={true}
                 />
               )}
             </div>
