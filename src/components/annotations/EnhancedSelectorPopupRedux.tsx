@@ -329,7 +329,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             <div className="absolute z-10" style={{
               left: position && position.x <= 50 ? '310px' : 'auto',
               right: position && position.x > 50 ? '310px' : 'auto',
-              top: '-30px',
+              top: '-15px',
               marginLeft: position && position.x <= 50 ? '0px' : 'auto',
               marginRight: position && position.x > 50 ? '0px' : 'auto',
             }}>

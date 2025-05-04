@@ -43,6 +43,18 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
     onSelect(newSelectedIds); // Automatically apply changes when selecting
   };
   
+  // Use Escape key to close modal
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+  
   return (
     <div 
       className="bg-white rounded-lg shadow-md overflow-hidden"
@@ -55,18 +67,12 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
         boxShadow: '0px 3px 4px -2px rgba(0, 0, 0, 0.1)'
       }}
     >
-      {/* Header */}
-      <div className="px-3 py-1 border-b border-gray-200 flex items-center justify-between">
+      {/* Header with title only */}
+      <div className="px-3 py-1 border-b border-gray-200">
         <h2 className="text-xs font-mono font-semibold text-gray-900 uppercase tracking-tight">{title}</h2>
-        <button 
-          className="text-gray-500 hover:text-gray-700" 
-          onClick={onClose}
-        >
-          ✕
-        </button>
       </div>
       
-      {/* Search bar */}
+      {/* Search bar directly below title */}
       {showSearch && (
         <div className="px-3 py-1 border-b border-gray-200">
           <div className="relative rounded-md">
