@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { updateIndicator, addIndicator } from '../../store/slices/clickIndicatorSlice';
 import {
@@ -75,6 +75,64 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
   const [severity, setSeverity] = useState<string>(tempIndicator?.severity || 'maj');
   const [throughPaint, setThroughPaint] = useState<boolean>(tempIndicator?.throughPaint || false);
   
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState<{
+    component?: string;
+    material?: string;
+    damageType?: string;
+    dependency?: string;
+  }>({});
+
+  // Check if form is valid
+  const isFormValid = Object.keys(validationErrors).length === 0;
+  
+  // Real-time validation
+  useEffect(() => {
+    validateForm();
+  }, [selectedComponents, selectedMaterials, selectedDamageTypes, severity, throughPaint]);
+
+  // Validation function
+  const validateForm = () => {
+    const newErrors: {
+      component?: string;
+      material?: string;
+      damageType?: string;
+      dependency?: string;
+    } = {};
+    
+    // Required fields validation - all three fields are now required
+    if (selectedComponents.length === 0) {
+      newErrors.component = 'Component is required';
+    }
+    
+    if (selectedMaterials.length === 0) {
+      newErrors.material = 'Material is required';
+    }
+    
+    if (selectedDamageTypes.length === 0) {
+      newErrors.damageType = 'Damage type is required';
+    }
+    
+    // Interdependent validation examples
+    // Example 2: Specific component/damage type combination validation
+    const hasForbiddenCombination = selectedComponents.includes('WINDSHIELD') && 
+                                   selectedDamageTypes.includes('SEVERE_DAMAGE');
+                                   
+    if (hasForbiddenCombination) {
+      newErrors.dependency = 'Windshield cannot have severe damage, please select a different component or damage type';
+    }
+    
+    // Example 3: Through paint validation - only applicable for certain materials
+    const metalMaterials = ['METAL', 'ALUMINUM', 'STEEL'];
+    const hasMetal = selectedMaterials.some(m => metalMaterials.includes(m));
+    
+    if (throughPaint && (!hasMetal && selectedMaterials.length > 0)) {
+      newErrors.dependency = 'Through paint is only applicable for metal materials';
+    }
+    
+    setValidationErrors(newErrors);
+  };
+  
   // Determine position styling for main popup
   const getPositionStyle = () => {
     if (!position) return {};
@@ -129,9 +187,13 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
   const handleConfirm = () => {
     if (!activeImageId || !tempIndicator) return;
     
-    // Make sure required fields are selected
-    if (selectedDamageTypes.length === 0 || selectedComponents.length === 0) {
-      return; // Should show validation error
+    // Perform validation before submitting
+    validateForm();
+    
+    // Show a notification if there are validation errors but still allow submission
+    if (Object.keys(validationErrors).length > 0) {
+      // We could add a toast notification here if desired
+      console.warn('Form submitted with validation errors:', validationErrors);
     }
     
     const damageType = selectedDamageTypes[0]; // Using first selected damage type
@@ -213,7 +275,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
         <div 
           className="bg-white rounded-lg shadow-md overflow-hidden"
           style={{
-            width: '300px',
+            width: '350px',
             boxShadow: '0px 8px 14px -4px rgba(17, 12, 34, 0.08)',
             borderRadius: '8px',
             display: 'flex',
@@ -224,12 +286,16 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
           <div className="p-2 space-y-1 w-full">
             {/* Component Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className={`w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors ${
+                validationErrors.component ? 'border border-red-400' : ''
+              }`}
               onClick={() => setActiveModal(activeModal === 'component' ? null : 'component')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">COMPONENT [P]</span>
               <div className="flex items-center">
-                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                <span className={`text-xs font-mono font-semibold mr-1 ${
+                  validationErrors.component ? 'text-red-500' : 'text-gray-800'
+                }`}>
                   {componentValue}
                 </span>
                 <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,15 +303,22 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                 </svg>
               </div>
             </button>
+            {validationErrors.component && (
+              <p className="text-xs text-red-500 ml-1">{validationErrors.component}</p>
+            )}
             
             {/* Material Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className={`w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors ${
+                validationErrors.material ? 'border border-red-400' : ''
+              }`}
               onClick={() => setActiveModal(activeModal === 'material' ? null : 'material')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">MATERIAL [M]</span>
               <div className="flex items-center">
-                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                <span className={`text-xs font-mono font-semibold mr-1 ${
+                  validationErrors.material ? 'text-red-500' : 'text-gray-800'
+                }`}>
                   {materialValue}
                 </span>
                 <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,15 +326,22 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                 </svg>
               </div>
             </button>
+            {validationErrors.material && (
+              <p className="text-xs text-red-500 ml-1">{validationErrors.material}</p>
+            )}
             
             {/* Damage Type Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className={`w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors ${
+                validationErrors.damageType ? 'border border-red-400' : ''
+              }`}
               onClick={() => setActiveModal(activeModal === 'damageType' ? null : 'damageType')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">DAMAGE TYPE [D]</span>
               <div className="flex items-center">
-                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                <span className={`text-xs font-mono font-semibold mr-1 ${
+                  validationErrors.damageType ? 'text-red-500' : 'text-gray-800'
+                }`}>
                   {damageTypeValue}
                 </span>
                 <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,6 +349,9 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                 </svg>
               </div>
             </button>
+            {validationErrors.damageType && (
+              <p className="text-xs text-red-500 ml-1">{validationErrors.damageType}</p>
+            )}
           
             {/* Severity Options */}
             <div className="mt-1">
@@ -306,6 +389,13 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             </div>
           </div>
           
+          {/* Dependency validation errors */}
+          {validationErrors.dependency && (
+            <div className="px-2 py-1 bg-red-50 border-t border-red-200 w-full">
+              <p className="text-xs text-red-600 font-mono">{validationErrors.dependency}</p>
+            </div>
+          )}
+          
           {/* Footer with buttons */}
           <div className="px-3 py-1 flex justify-between items-center border-t border-gray-200 w-full">
             <button
@@ -317,7 +407,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             </button>
             <button
               type="button"
-              className="px-2 py-1 bg-[#1A58D2] border border-transparent rounded-md text-xs font-medium text-white hover:bg-blue-700 focus:outline-none font-mono"
+              className="px-2 py-1 border border-transparent rounded-md text-xs font-medium text-white bg-[#1A58D2] hover:bg-blue-700 focus:outline-none font-mono"
               onClick={handleConfirm}
             >
               Confirm <span className="text-blue-300">[↵]</span>
@@ -327,8 +417,8 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
           {/* Selection Modals - Positioned adjacent to main popup */}
           {activeModal && (
             <div className="absolute z-10" style={{
-              left: position && position.x <= 50 ? '310px' : 'auto',
-              right: position && position.x > 50 ? '310px' : 'auto',
+              left: position && position.x <= 50 ? '360px' : 'auto',
+              right: position && position.x > 50 ? '360px' : 'auto',
               top: '-15px',
               marginLeft: position && position.x <= 50 ? '0px' : 'auto',
               marginRight: position && position.x > 50 ? '0px' : 'auto',
