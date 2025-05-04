@@ -8,6 +8,12 @@ const { Title, Paragraph } = Typography;
 const HomePage: React.FC = () => {
   const demoPages = [
     {
+      title: 'Redux Data Management Demo',
+      description: 'Demo của Redux, Redux Saga và Redux Persist cho việc quản lý annotations.',
+      path: '/redux-demo',
+      highlight: true,
+    },
+    {
       title: 'Header Demo',
       description: 'Demo của Header với Session Card, Back Button, và các component Report/Timer.',
       path: '/header',
