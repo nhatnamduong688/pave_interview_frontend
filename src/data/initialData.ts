@@ -69,29 +69,30 @@ export const initialData = {
     selectedPhotoId: "photo-4",
     selectedAnnotationId: null,
     annotationInProgress: {
-      photoId: null as null | string,
-      shape: null as null | { type: string; x: number; y: number; radius: number },
-      components: [] as string[],
-      material: null as null | string,
-      damageType: [] as string[],
-      severity: null as null | number,
+      photoId: null,
+      shape: null,
+      components: [],
+      material: null,
+      damageType: [],
+      severity: null,
       throughPaint: false
     },
     finished: false
   }
 };
 
+// Simple type exports 
 export type InitialDataType = typeof initialData;
 export type OptionsState = typeof initialData.options;
 export type JobState = typeof initialData.job;
 export type UIState = typeof initialData.ui;
 
 // Types for various entities
-export type ComponentOption = typeof initialData.options.componentOptions[0];
-export type MaterialOption = typeof initialData.options.materialOptions[0];
-export type DamageTypeOption = typeof initialData.options.damageTypeOptions[0];
-export type SeverityOption = typeof initialData.options.severityOptions[0];
-export type Photo = typeof initialData.job.photos[0];
+export type ComponentOption = { code: string; label: string; keyHint: string };
+export type MaterialOption = { code: string; label: string; keyHint: string };
+export type DamageTypeOption = { code: string; label: string; keyHint: string };
+export type SeverityOption = { value: number; label: string };
+export type Photo = { id: string; jobId: string; viewName: string; url: string; sequence: number; annotations: Annotation[] };
 export type Annotation = {
   id: string;
   photoId: string;
@@ -106,4 +107,12 @@ export type Annotation = {
   createdBy: string;
   createdAt: string;
 };
-export type AnnotationInProgress = typeof initialData.ui.annotationInProgress;
+export type AnnotationInProgress = {
+  photoId: null | string;
+  shape: null | { type: string; x: number; y: number; radius: number };
+  components: string[];
+  material: null | string;
+  damageType: string[];
+  severity: null | number;
+  throughPaint: boolean;
+}; 
