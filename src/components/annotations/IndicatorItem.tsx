@@ -21,8 +21,10 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({
 }) => {
   return (
     <div 
-      className={`rounded-md border overflow-hidden cursor-pointer ${
-        indicator.isHighlighted ? 'ring-2 ring-blue-300 border-blue-300' : 'border-gray-200'
+      className={`rounded-md border overflow-hidden cursor-pointer transition-all duration-200 ${
+        indicator.isHighlighted 
+          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md transform scale-[1.02]' 
+          : 'border-gray-200 hover:border-gray-300'
       }`}
       onClick={() => onIndicatorClick(indicator.id)}
     >

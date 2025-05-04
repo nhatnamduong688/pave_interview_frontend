@@ -213,7 +213,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
         <div 
           className="bg-white rounded-lg shadow-md overflow-hidden"
           style={{
-            width: '220px',
+            width: '300px',
             boxShadow: '0px 8px 14px -4px rgba(17, 12, 34, 0.08)',
             borderRadius: '8px',
             display: 'flex',
@@ -221,10 +221,10 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             alignItems: 'flex-start'
           }}
         >
-          <div className="p-3 space-y-1 w-full">
+          <div className="p-2 space-y-1 w-full">
             {/* Component Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'component' ? null : 'component')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">COMPONENT [P]</span>
@@ -240,7 +240,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             
             {/* Material Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'material' ? null : 'material')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">MATERIAL [M]</span>
@@ -256,7 +256,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
             
             {/* Damage Type Selector */}
             <button
-              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
+              className="w-full bg-[#F3F4F6] rounded-lg p-2 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'damageType' ? null : 'damageType')}
             >
               <span className="text-xs font-mono font-semibold text-gray-800 uppercase">DAMAGE TYPE [D]</span>
@@ -277,7 +277,7 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
                 {severityOptionsFromStore.map((option) => (
                   <button 
                     key={option.value}
-                    className={`rounded-full px-4 py-1 text-xs font-mono ${severity === option.label.toLowerCase() 
+                    className={`rounded-full px-3 py-1 text-xs font-mono ${severity === option.label.toLowerCase() 
                       ? option.label === 'Maj' 
                           ? 'bg-red-100 border border-red-400 text-red-700' 
                           : 'bg-gray-200 border border-gray-400 text-gray-700' 
@@ -307,17 +307,17 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
           </div>
           
           {/* Footer with buttons */}
-          <div className="px-4 py-2 flex justify-between items-center border-t border-gray-200 w-full">
+          <div className="px-3 py-1 flex justify-between items-center border-t border-gray-200 w-full">
             <button
               type="button"
-              className="px-3 py-1.5 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none font-mono"
+              className="px-2 py-1 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none font-mono"
               onClick={onCancel}
             >
               Cancel <span className="text-gray-500">[ESC]</span>
             </button>
             <button
               type="button"
-              className="px-3 py-1.5 bg-[#1A58D2] border border-transparent rounded-md text-xs font-medium text-white hover:bg-blue-700 focus:outline-none font-mono"
+              className="px-2 py-1 bg-[#1A58D2] border border-transparent rounded-md text-xs font-medium text-white hover:bg-blue-700 focus:outline-none font-mono"
               onClick={handleConfirm}
             >
               Confirm <span className="text-blue-300">[↵]</span>
@@ -327,11 +327,11 @@ const EnhancedSelectorPopupRedux: React.FC<EnhancedSelectorPopupReduxProps> = ({
           {/* Selection Modals - Positioned adjacent to main popup */}
           {activeModal && (
             <div className="absolute z-10" style={{
-              left: position && position.x <= 50 ? '240px' : 'auto',
-              right: position && position.x > 50 ? '240px' : 'auto',
-              top: '-60px',
-              marginLeft: position && position.x <= 50 ? '15px' : 'auto',
-              marginRight: position && position.x > 50 ? '15px' : 'auto',
+              left: position && position.x <= 50 ? '310px' : 'auto',
+              right: position && position.x > 50 ? '310px' : 'auto',
+              top: '-30px',
+              marginLeft: position && position.x <= 50 ? '0px' : 'auto',
+              marginRight: position && position.x > 50 ? '0px' : 'auto',
             }}>
               {activeModal === 'component' && (
                 <SelectionModal

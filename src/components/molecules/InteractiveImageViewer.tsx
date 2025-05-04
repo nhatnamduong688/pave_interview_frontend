@@ -62,13 +62,17 @@ const InteractiveImageViewer: React.FC<InteractiveImageViewerProps> = ({
           <div
             key={indicator.id}
             className={`absolute w-5 h-5 rounded-full transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 z-10 ${
-              indicator.isHighlighted ? 'ring-4 ring-white' : ''
+              indicator.isHighlighted 
+                ? 'ring-4 ring-white scale-125 z-20' 
+                : ''
             }`}
             style={{
               left: `${indicator.x}%`,
               top: `${indicator.y}%`,
               backgroundColor: indicator.color,
-              boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2)',
+              boxShadow: indicator.isHighlighted 
+                ? '0 0 0 2px rgba(0, 0, 0, 0.2), 0 0 10px 2px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(0, 0, 0, 0.3)' 
+                : '0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2)',
             }}
             onClick={(e) => handleIndicatorClick(e, indicator.id)}
           />

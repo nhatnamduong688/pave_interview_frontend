@@ -16,7 +16,6 @@ import { useOptionsData } from '../../hooks/useOptionsData';
 // Custom UI components
 import EnhancedSelectorPopup from '../annotations/EnhancedSelectorPopup';
 import EnhancedSelectorPopupRedux from '../annotations/EnhancedSelectorPopupRedux';
-import SelectorPanel from '../annotations/SelectorPanel';
 import AnnotationPanel from '../annotations/AnnotationPanel';
 
 // Import thêm MaterialOptions từ useOptionsData
@@ -136,7 +135,8 @@ const VehicleDamageAnnotationV2: React.FC = () => {
     handleThroughPaintToggle,
     startNewAnnotation,
     startEditingAnnotation,
-    prepareAnnotationData
+    prepareAnnotationData,
+    resetPopupState
   } = useAnnotationPopup({ damageTypeOptions, componentTypes });
   
   // UI state hook
@@ -161,10 +161,9 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   
   // Hàm xử lý click indicator đã được re-implement
   const onIndicatorClick = (id: string) => {
-    const indicator = handleIndicatorClick(id);
-    if (indicator) {
-      startEditingAnnotation(indicator);
-    }
+    // Gọi handleIndicatorClick để highlight indicator
+    handleIndicatorClick(id);
+    // Không mở popup chỉnh sửa nữa
   };
 
   // Hàm xử lý cancel popup
@@ -181,6 +180,10 @@ const VehicleDamageAnnotationV2: React.FC = () => {
         imageId: activeImageId
       });
     }
+    
+    // Đóng tất cả popup và reset trạng thái
+    resetPopupState();
+    setTempIndicator(null);
   };
   
   // Lấy chi tiết view active
@@ -290,18 +293,6 @@ const VehicleDamageAnnotationV2: React.FC = () => {
           </div>
 
           <div className="px-4">
-            {/* Selector Panel Component */}
-            <SelectorPanel
-              damageTypeOptions={damageTypeOptions}
-              componentTypes={componentTypes}
-              activeDamageType={activeDamageType}
-              activeComponent={activeComponent}
-              isAnnotationMode={isAnnotationMode}
-              onSelectDamageType={handleSelectDamageType}
-              onSelectComponent={handleSelectComponent}
-              onToggleAnnotationMode={handleToggleAnnotationMode}
-            />
-
             {/* Annotation Panel Component */}
             <AnnotationPanel
               indicators={indicators}
@@ -323,15 +314,6 @@ const VehicleDamageAnnotationV2: React.FC = () => {
           >
             Finish [F]
           </button>
-          
-          {indicators.length > 0 && (
-            <button 
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md text-sm transition"
-              onClick={handleResetCurrentImage}
-            >
-              Clear All for Current View
-            </button>
-          )}
         </div>
       </div>
     </div>

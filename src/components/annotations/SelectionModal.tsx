@@ -47,7 +47,8 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
     <div 
       className="bg-white rounded-lg shadow-md overflow-hidden"
       style={{
-        width: '220px',
+        width: '300px',
+        maxHeight: '280px',
         display: 'flex',
         flexDirection: 'column',
         borderRadius: '8px',
@@ -55,7 +56,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
       }}
     >
       {/* Header */}
-      <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+      <div className="px-3 py-1 border-b border-gray-200 flex items-center justify-between">
         <h2 className="text-xs font-mono font-semibold text-gray-900 uppercase tracking-tight">{title}</h2>
         <button 
           className="text-gray-500 hover:text-gray-700" 
@@ -67,16 +68,16 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
       
       {/* Search bar */}
       {showSearch && (
-        <div className="px-4 py-2 border-b border-gray-200">
+        <div className="px-3 py-1 border-b border-gray-200">
           <div className="relative rounded-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-3 w-3 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-[#F3F4F6] placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono"
+              className="block w-full pl-10 pr-3 py-1 border border-gray-300 rounded-lg text-xs bg-[#F3F4F6] placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono"
               placeholder="Search.."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -86,7 +87,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
       )}
       
       {/* Options list */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-1">
         {filteredOptions.map((option, index) => {
           const isHovered = hoveredOptionId === option.id;
           const isSelected = localSelectedIds.includes(option.id);
@@ -104,7 +105,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({
             <div
               key={option.id}
               className={`
-                inline-flex items-center w-full gap-2 px-3 py-2 
+                inline-flex items-center w-full gap-2 px-3 py-1 
                 rounded-full cursor-pointer mb-1 transition-colors
                 ${stateClasses}
               `}
