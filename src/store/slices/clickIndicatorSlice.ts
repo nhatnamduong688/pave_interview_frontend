@@ -8,6 +8,11 @@ export interface Indicator {
   y: number;
   color: string;
   isHighlighted?: boolean;
+  damageType?: string;
+  component?: string;
+  confirmed?: boolean;
+  severity?: string;
+  throughPaint?: boolean;
 }
 
 // Interface cho state với indicators được lưu theo imageId
@@ -70,8 +75,18 @@ const clickIndicatorSlice = createSlice({
     },
     
     // Thêm indicator mới từ click vào ảnh
-    addIndicator: (state, action: PayloadAction<{ imageId: string; x: number; y: number }>) => {
-      const { imageId, x, y } = action.payload;
+    addIndicator: (state, action: PayloadAction<{
+      imageId: string;
+      x: number;
+      y: number;
+      damageType?: string;
+      component?: string;
+      color?: string;
+      confirmed?: boolean;
+      severity?: string;
+      throughPaint?: boolean;
+    }>) => {
+      const { imageId, x, y, damageType, component, color, confirmed, severity, throughPaint } = action.payload;
       
       // Ensure the image has an entry
       if (!state.indicatorsByImage[imageId]) {
@@ -82,8 +97,13 @@ const clickIndicatorSlice = createSlice({
         id: uuidv4(),
         x,
         y,
-        color: getRandomColor(),
+        color: color || getRandomColor(),
         isHighlighted: false,
+        damageType,
+        component,
+        confirmed,
+        severity,
+        throughPaint
       };
       
       state.indicatorsByImage[imageId].push(newIndicator);
@@ -148,6 +168,23 @@ const clickIndicatorSlice = createSlice({
       state.indicatorsByImage = {};
       state.selectedIndicatorId = null;
     },
+    
+    // Cập nhật indicator đã tồn tại
+    updateIndicator: (state, action: PayloadAction<{ 
+      imageId: string; 
+      indicatorId: string; 
+      updates: Partial<Indicator> 
+    }>) => {
+      const { imageId, indicatorId, updates } = action.payload;
+      
+      if (!state.indicatorsByImage[imageId]) return;
+      
+      const indicator = state.indicatorsByImage[imageId].find(ind => ind.id === indicatorId);
+      
+      if (indicator) {
+        Object.assign(indicator, updates);
+      }
+    },
   },
 });
 
@@ -160,6 +197,7 @@ export const {
   removeIndicator,
   resetImageIndicators,
   resetAllIndicators,
+  updateIndicator,
 } = clickIndicatorSlice.actions;
 
 export default clickIndicatorSlice.reducer; 
