@@ -13,12 +13,12 @@ export interface EnhancedSelectorPopupProps {
   damageTypeOptions: SelectorOption[];
   componentOptions: SelectorOption[];
   materialOptions: SelectorOption[];
-  selectedDamageType: string | null;
-  selectedComponent: string | null;
-  selectedMaterial: string | null;
-  onSelectDamageType: (id: string) => void;
-  onSelectComponent: (id: string) => void;
-  onSelectMaterial: (id: string) => void;
+  selectedDamageTypes: string[];
+  selectedComponents: string[];
+  selectedMaterials: string[];
+  onSelectDamageTypes: (ids: string[]) => void;
+  onSelectComponents: (ids: string[]) => void;
+  onSelectMaterials: (ids: string[]) => void;
   onCancel: () => void;
   onConfirm: () => void;
   severity?: string;
@@ -34,12 +34,12 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
   damageTypeOptions,
   componentOptions,
   materialOptions,
-  selectedDamageType,
-  selectedComponent,
-  selectedMaterial,
-  onSelectDamageType,
-  onSelectComponent,
-  onSelectMaterial,
+  selectedDamageTypes = [],
+  selectedComponents = [],
+  selectedMaterials = [],
+  onSelectDamageTypes,
+  onSelectComponents,
+  onSelectMaterials,
   onCancel,
   onConfirm,
   severity = 'maj',
@@ -81,20 +81,25 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
     return positionStyle;
   };
   
-  // Component Row Value
-  const componentValue = selectedComponent ? 
-    componentOptions.find(c => c.id === selectedComponent)?.label || 'Select' : 
-    'Select';
+  // Format selected value display
+  const formatSelectedValues = (selectedIds: string[], options: SelectorOption[]) => {
+    if (selectedIds.length === 0) return 'Select';
+    if (selectedIds.length === 1) {
+      const option = options.find(o => o.id === selectedIds[0]);
+      return option ? option.label : 'Select';
+    }
+    const firstOption = options.find(o => o.id === selectedIds[0]);
+    return `${firstOption?.label || 'Select'} +${selectedIds.length - 1}`;
+  };
+  
+  // Component display value
+  const componentValue = formatSelectedValues(selectedComponents, componentOptions);
 
-  // Material Row Value
-  const materialValue = selectedMaterial ? 
-    materialOptions.find(m => m.id === selectedMaterial)?.label || 'Select' : 
-    'Select';
+  // Material display value
+  const materialValue = formatSelectedValues(selectedMaterials, materialOptions);
 
-  // Damage Type Row Value
-  const damageTypeValue = selectedDamageType ? 
-    damageTypeOptions.find(d => d.id === selectedDamageType)?.label || 'Select' : 
-    'Select';
+  // Damage Type display value
+  const damageTypeValue = formatSelectedValues(selectedDamageTypes, damageTypeOptions);
     
   return (
     <>
@@ -105,8 +110,8 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
           style={{
             left: `${position.x}%`,
             top: `${position.y}%`,
-            backgroundColor: selectedDamageType ? 
-              damageTypeOptions.find(dt => dt.id === selectedDamageType)?.color || '#ef4444' : 
+            backgroundColor: selectedDamageTypes.length > 0 ? 
+              damageTypeOptions.find(dt => dt.id === selectedDamageTypes[0])?.color || '#ef4444' : 
               '#ef4444',
             boxShadow: '0 0 0 2px rgba(0,0,0,0.2)'
           }}
@@ -122,75 +127,88 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
         }}
       >
         <div 
-          className="bg-gray-50 rounded-lg shadow-lg border border-gray-100 w-[380px] overflow-hidden"
+          className="bg-white rounded-lg shadow-md overflow-hidden"
+          style={{
+            width: '280px',
+            borderRadius: '8px',
+            boxShadow: '0px 3px 4px -2px rgba(0, 0, 0, 0.1)'
+          }}
         >
-          <div className="p-4 space-y-4">
+          {/* Header - đã bỏ */}
+          
+          <div className="p-4 space-y-3">
             {/* Component Selector */}
-            <div 
-              className="flex items-center justify-between p-4 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+            <button
+              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'component' ? null : 'component')}
             >
-              <div className="font-mono text-gray-700 font-medium">
-                COMPONENT [P]
-              </div>
+              <span className="text-xs font-mono font-semibold text-gray-800 uppercase">COMPONENT [P]</span>
               <div className="flex items-center">
-                <span className="mr-2 font-mono">{componentValue}</span>
-                <span>❯</span>
+                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                  {componentValue}
+                </span>
+                <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </button>
             
             {/* Material Selector */}
-            <div 
-              className="flex items-center justify-between p-4 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+            <button
+              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'material' ? null : 'material')}
             >
-              <div className="font-mono text-gray-700 font-medium">
-                MATERIAL [M]
-              </div>
+              <span className="text-xs font-mono font-semibold text-gray-800 uppercase">MATERIAL [M]</span>
               <div className="flex items-center">
-                <span className="mr-2 font-mono">{materialValue}</span>
-                <span>❯</span>
+                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                  {materialValue}
+                </span>
+                <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </button>
             
             {/* Damage Type Selector */}
-            <div 
-              className="flex items-center justify-between p-4 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+            <button
+              className="w-full bg-[#F3F4F6] rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 transition-colors"
               onClick={() => setActiveModal(activeModal === 'damageType' ? null : 'damageType')}
             >
-              <div className="font-mono text-gray-700 font-medium">
-                DAMAGE TYPE [D]
-              </div>
+              <span className="text-xs font-mono font-semibold text-gray-800 uppercase">DAMAGE TYPE [D]</span>
               <div className="flex items-center">
-                <span className="mr-2 font-mono">{damageTypeValue}</span>
-                <span>❯</span>
+                <span className="text-xs font-mono font-semibold text-gray-800 mr-1">
+                  {damageTypeValue}
+                </span>
+                <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </button>
           
             {/* Severity Options */}
-            <div className="mt-4 mb-2">
-              <p className="font-mono text-gray-700 font-medium mb-3">SEVERITY</p>
-              <div className="flex space-x-4">
+            <div className="mt-2">
+              <p className="text-xs font-mono font-semibold text-gray-800 uppercase mb-2">SEVERITY</p>
+              <div className="flex space-x-2">
                 <button 
-                  className={`rounded-full px-6 py-2 font-mono border ${severity === 'min' 
-                    ? 'bg-gray-200 border-gray-400 text-gray-700' 
-                    : 'bg-gray-100 border-gray-300 text-gray-500'}`}
+                  className={`rounded-full px-4 py-1 text-xs font-mono ${severity === 'min' 
+                    ? 'bg-gray-200 border border-gray-400 text-gray-700' 
+                    : 'bg-gray-100 border border-gray-300 text-gray-500'}`}
                   onClick={() => onSeverityChange && onSeverityChange('min')}
                 >
                   Min
                 </button>
                 <button 
-                  className={`rounded-full px-6 py-2 font-mono border ${severity === 'med' 
-                    ? 'bg-gray-200 border-gray-400 text-gray-700' 
-                    : 'bg-gray-100 border-gray-300 text-gray-500'}`}
+                  className={`rounded-full px-4 py-1 text-xs font-mono ${severity === 'med' 
+                    ? 'bg-gray-200 border border-gray-400 text-gray-700' 
+                    : 'bg-gray-100 border border-gray-300 text-gray-500'}`}
                   onClick={() => onSeverityChange && onSeverityChange('med')}
                 >
                   Med
                 </button>
                 <button 
-                  className={`rounded-full px-6 py-2 font-mono border ${severity === 'maj' 
-                    ? 'bg-red-100 border-red-400 text-red-700' 
-                    : 'bg-gray-100 border-gray-300 text-gray-500'}`}
+                  className={`rounded-full px-4 py-1 text-xs font-mono ${severity === 'maj' 
+                    ? 'bg-red-100 border border-red-400 text-red-700' 
+                    : 'bg-gray-100 border border-gray-300 text-gray-500'}`}
                   onClick={() => onSeverityChange && onSeverityChange('maj')}
                 >
                   Maj
@@ -199,35 +217,37 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
             </div>
             
             {/* Through Paint Toggle */}
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-mono text-gray-700 font-medium">THROUGH PAINT</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-mono font-semibold text-gray-800 uppercase">THROUGH PAINT</p>
               <div 
-                className={`w-12 h-6 rounded-full ${throughPaint ? 'bg-blue-600' : 'bg-gray-300'} relative cursor-pointer`}
+                className={`w-10 h-5 rounded-full ${throughPaint ? 'bg-[#1A58D2]' : 'bg-gray-300'} relative cursor-pointer`}
                 onClick={onThroughPaintToggle}
               >
                 <div 
-                  className={`absolute w-5 h-5 bg-white rounded-full top-0.5 transform transition-transform ${
-                    throughPaint ? 'translate-x-6' : 'translate-x-0.5'
+                  className={`absolute w-4 h-4 bg-white rounded-full top-0.5 transform transition-transform ${
+                    throughPaint ? 'translate-x-5' : 'translate-x-0.5'
                   }`}
                 />
               </div>
             </div>
-            
-            {/* Action buttons */}
-            <div className="flex justify-between pt-4 border-t border-gray-200">
-              <button
-                className="px-4 py-2 font-mono border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                onClick={onCancel}
-              >
-                Cancel <span className="text-gray-500">[ESC]</span>
-              </button>
-              <button
-                className="px-4 py-2 font-mono bg-blue-600 rounded-md text-white hover:bg-blue-700"
-                onClick={onConfirm}
-              >
-                Confirm <span className="text-blue-300">[↵]</span>
-              </button>
-            </div>
+          </div>
+          
+          {/* Footer with buttons */}
+          <div className="px-4 py-2 flex justify-between items-center border-t border-gray-200">
+            <button
+              type="button"
+              className="px-3 py-1.5 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none font-mono"
+              onClick={onCancel}
+            >
+              Cancel <span className="text-gray-500">[ESC]</span>
+            </button>
+            <button
+              type="button"
+              className="px-3 py-1.5 bg-[#1A58D2] border border-transparent rounded-md text-xs font-medium text-white hover:bg-blue-700 focus:outline-none font-mono"
+              onClick={onConfirm}
+            >
+              Confirm <span className="text-blue-300">[↵]</span>
+            </button>
           </div>
           
           {/* Selection Modals - Positioned adjacent to main popup */}
@@ -243,11 +263,9 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
                 <SelectionModal
                   title="COMPONENT"
                   options={componentOptions}
-                  onSelect={(id) => {
-                    onSelectComponent(id);
-                    setActiveModal(null);
-                  }}
+                  onSelect={onSelectComponents}
                   onClose={() => setActiveModal(null)}
+                  selectedIds={selectedComponents}
                 />
               )}
               
@@ -255,11 +273,9 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
                 <SelectionModal
                   title="MATERIAL"
                   options={materialOptions}
-                  onSelect={(id) => {
-                    onSelectMaterial(id);
-                    setActiveModal(null);
-                  }}
+                  onSelect={onSelectMaterials}
                   onClose={() => setActiveModal(null)}
+                  selectedIds={selectedMaterials}
                 />
               )}
               
@@ -267,11 +283,9 @@ const EnhancedSelectorPopup: React.FC<EnhancedSelectorPopupProps> = ({
                 <SelectionModal
                   title="DAMAGE TYPE"
                   options={damageTypeOptions}
-                  onSelect={(id) => {
-                    onSelectDamageType(id);
-                    setActiveModal(null);
-                  }}
+                  onSelect={onSelectDamageTypes}
                   onClose={() => setActiveModal(null)}
+                  selectedIds={selectedDamageTypes}
                 />
               )}
             </div>
