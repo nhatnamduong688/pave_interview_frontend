@@ -29,6 +29,7 @@ import VehicleDamageAnnotation from './components/pages/VehicleDamageAnnotation'
 import VehicleDamageAnnotationV2 from './components/pages/VehicleDamageAnnotationV2'
 import VehicleDamageCompletePage from './components/pages/VehicleDamageCompletePage'
 import VehicleDamageReportPage from './components/pages/VehicleDamageReportPage'
+import VehicleThemeSelectionPage from './components/pages/VehicleThemeSelectionPage'
 import './App.css'
 
 function App() {
@@ -69,8 +70,9 @@ function App() {
           <Route path="/vehicle-damage-complete/:id" element={<VehicleDamageCompletePage />} />
           <Route path="/vehicle-damage-report" element={<VehicleDamageReportPage />} />
           <Route path="/vehicle-damage-report/:id" element={<VehicleDamageReportPage />} />
+          <Route path="/vehicle-theme-selection" element={<VehicleThemeSelectionPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/vehicle-theme-selection" replace />} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider>

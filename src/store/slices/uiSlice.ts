@@ -1,9 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AnnotationInProgress, UIState, initialData } from '../../data/initialData';
 
+// Mở rộng UIState để thêm theme
+interface ExtendedUIState extends UIState {
+  theme: string;
+}
+
+// Khởi tạo state với theme mặc định là 'light'
+const initialState: ExtendedUIState = {
+  ...initialData.ui as UIState,
+  theme: 'light'
+};
+
 const uiSlice = createSlice({
   name: 'ui',
-  initialState: initialData.ui as UIState,
+  initialState,
   reducers: {
     // Chọn photo
     selectPhoto: (state, action: PayloadAction<string>) => {
@@ -102,6 +113,11 @@ const uiSlice = createSlice({
     // Đánh dấu hoàn thành
     setFinished: (state, action: PayloadAction<boolean>) => {
       state.finished = action.payload;
+    },
+
+    // Thêm action mới để set theme
+    setTheme: (state, action: PayloadAction<string>) => {
+      state.theme = action.payload;
     }
   },
 });
@@ -115,7 +131,8 @@ export const {
   toggleDamageTypeForAnnotation,
   completeAnnotation,
   cancelAnnotation,
-  setFinished
+  setFinished,
+  setTheme
 } = uiSlice.actions;
 
 export default uiSlice.reducer; 

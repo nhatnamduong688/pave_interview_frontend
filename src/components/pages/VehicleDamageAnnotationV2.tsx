@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from 'antd';
+import { Layout, ConfigProvider } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../organisms/Header';
 import ThumbnailList from '../molecules/ThumbnailList';
@@ -20,6 +20,43 @@ import AnnotationPanel from '../annotations/AnnotationPanel';
 
 // Import thêm MaterialOptions từ useOptionsData
 import { DamageTypeOption, ComponentType, MaterialType } from '../../hooks/useOptionsData';
+
+// Redux store
+import { useAppSelector } from '../../store';
+
+// Theme configs
+const themeConfigs = {
+  light: {
+    bgColor: '#f5f5f5',
+    contentBg: '#ffffff',
+    textColor: '#000000',
+    primaryColor: '#1890ff'
+  },
+  dark: {
+    bgColor: '#141414',
+    contentBg: '#1f1f1f',
+    textColor: '#ffffff',
+    primaryColor: '#177ddc'
+  },
+  blue: {
+    bgColor: '#f0f5ff',
+    contentBg: '#ffffff',
+    textColor: '#000000',
+    primaryColor: '#1890ff'
+  },
+  green: {
+    bgColor: '#f6ffed',
+    contentBg: '#ffffff',
+    textColor: '#000000',
+    primaryColor: '#52c41a'
+  },
+  gray: {
+    bgColor: '#f0f2f5',
+    contentBg: '#ffffff',
+    textColor: '#000000',
+    primaryColor: '#595959'
+  }
+};
 
 const { Content } = Layout;
 
@@ -71,6 +108,11 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   const { id: vehicleIdFromUrl } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const vehicleId = vehicleIdFromUrl || mockVehicleData.vehicleId;
+  
+  // Lấy theme từ Redux store
+  const theme = useAppSelector(state => state.ui.theme) || 'light';
+  // Đảm bảo luôn có theme config hợp lệ, fallback về light nếu không tìm thấy
+  const currentTheme = themeConfigs[theme as keyof typeof themeConfigs] || themeConfigs.light;
   
   // Vehicle data hook
   const {
@@ -202,124 +244,140 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   };
   
   return (
-    <div className="flex h-screen w-full overflow-hidden">
-      {/* Main content area (left part) */}
-      <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'mr-0' : 'mr-[350px]'}`}>
-        {/* Header */}
-        <div className="flex-none h-16 bg-white z-10">
-          <Header
-            title=""
-            sessionId={sessionId}
-            tags={tags}
-            timestamp={timestamp}
-            onBack={handleBack}
-            onReport={handleReport}
-            onCollapseToggle={handleCollapseToggle}
-          />
-        </div>
-
-        {/* Center content with left sidebar and main viewer */}
-        <div className="flex flex-1 overflow-hidden pl-[12px] items-center relative">
-          {/* Sidebar Left - Thumbnail List */}
-          <div className="w-[84px] bg-white flex flex-col justify-center">
-            <ThumbnailList
-              thumbnails={images}
-              activeId={activeImageId || ''}
-              onSelect={handleThumbnailClick}
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: currentTheme.primaryColor || '#1890ff',
+          colorBgContainer: currentTheme.contentBg,
+          colorText: currentTheme.textColor,
+        },
+      }}
+    >
+      <div 
+        className="flex h-screen w-full overflow-hidden"
+        style={{ 
+          backgroundColor: currentTheme.bgColor,
+          color: currentTheme.textColor
+        }}
+      >
+        {/* Main content area (left part) */}
+        <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'mr-0' : 'mr-[350px]'}`}>
+          {/* Header */}
+          <div className="flex-none h-16 bg-white z-10">
+            <Header
+              title=""
+              sessionId={sessionId}
+              tags={tags}
+              timestamp={timestamp}
+              onBack={handleBack}
+              onReport={handleReport}
+              onCollapseToggle={handleCollapseToggle}
             />
           </div>
 
-          {/* Main Viewer with annotation capability */}
-          <div className="flex-1 overflow-auto flex items-center justify-center py-2 relative">
-            <InteractiveImageViewer
-              src={activeImage?.src || ''}
-              alt={activeImage?.alt}
-              indicators={indicators}
-              isInteractionEnabled={isAnnotationMode}
-              onImageClick={onImageClick}
-              onIndicatorClick={onIndicatorClick}
+          {/* Center content with left sidebar and main viewer */}
+          <div className="flex flex-1 overflow-hidden pl-[12px] items-center relative">
+            {/* Sidebar Left - Thumbnail List */}
+            <div className="w-[84px] bg-white flex flex-col justify-center">
+              <ThumbnailList
+                thumbnails={images}
+                activeId={activeImageId || ''}
+                onSelect={handleThumbnailClick}
+              />
+            </div>
+
+            {/* Main Viewer with annotation capability */}
+            <div className="flex-1 overflow-auto flex items-center justify-center py-2 relative">
+              <InteractiveImageViewer
+                src={activeImage?.src || ''}
+                alt={activeImage?.alt}
+                indicators={indicators}
+                isInteractionEnabled={isAnnotationMode}
+                onImageClick={onImageClick}
+                onIndicatorClick={onIndicatorClick}
+              />
+              
+              {/* Hiển thị indicator tạm thời */}
+              {tempIndicator && (
+                <div 
+                  className="absolute w-5 h-5 rounded-full border-2 border-white transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-30"
+                  style={{
+                    left: `${tempIndicator.x}%`,
+                    top: `${tempIndicator.y}%`,
+                    backgroundColor: tempIndicator.color || '#ef4444',
+                    boxShadow: '0 0 0 2px rgba(0,0,0,0.2)'
+                  }}
+                />
+              )}
+              
+              {/* Annotation Popup - Phiên bản mới với cả 3 loại lựa chọn */}
+              {pendingAnnotation && (
+                <EnhancedSelectorPopupRedux
+                  onCancel={onPopupCancel}
+                  onConfirm={onPopupComponentConfirm}
+                  tempIndicator={{
+                    ...(tempIndicator ? tempIndicator : {}),
+                    x: pendingAnnotation.x,
+                    y: pendingAnnotation.y,
+                    color: tempIndicator?.color || '#ef4444',
+                    damageType: tempDamageType || undefined,
+                    component: tempComponent || undefined,
+                    material: tempMaterial || undefined,
+                    severity: severity,
+                    throughPaint: throughPaint
+                  }}
+                  position={pendingAnnotation}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="flex-none">
+            <CustomAnnotationFooter
+              captionText={captionText}
+              extraThumbnails={extraThumbnails}
+              onThumbnailClick={handleThumbnailClick}
+              onToolbarAction={handleToolbarAction}
+              toolbarButtons={toolbarButtons}
+              isAnnotationMode={isAnnotationMode}
             />
-            
-            {/* Hiển thị indicator tạm thời */}
-            {tempIndicator && (
-              <div 
-                className="absolute w-5 h-5 rounded-full border-2 border-white transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-30"
-                style={{
-                  left: `${tempIndicator.x}%`,
-                  top: `${tempIndicator.y}%`,
-                  backgroundColor: tempIndicator.color || '#ef4444',
-                  boxShadow: '0 0 0 2px rgba(0,0,0,0.2)'
-                }}
-              />
-            )}
-            
-            {/* Annotation Popup - Phiên bản mới với cả 3 loại lựa chọn */}
-            {pendingAnnotation && (
-              <EnhancedSelectorPopupRedux
-                onCancel={onPopupCancel}
-                onConfirm={onPopupComponentConfirm}
-                tempIndicator={{
-                  ...(tempIndicator ? tempIndicator : {}),
-                  x: pendingAnnotation.x,
-                  y: pendingAnnotation.y,
-                  color: tempIndicator?.color || '#ef4444',
-                  damageType: tempDamageType || undefined,
-                  component: tempComponent || undefined,
-                  material: tempMaterial || undefined,
-                  severity: severity,
-                  throughPaint: throughPaint
-                }}
-                position={pendingAnnotation}
-              />
-            )}
           </div>
         </div>
 
-        <div className="flex-none">
-          <CustomAnnotationFooter
-            captionText={captionText}
-            extraThumbnails={extraThumbnails}
-            onThumbnailClick={handleThumbnailClick}
-            onToolbarAction={handleToolbarAction}
-            toolbarButtons={toolbarButtons}
-            isAnnotationMode={isAnnotationMode}
-          />
+        {/* Enhanced Sidebar Right with tabs - Full height with fixed footer */}
+        <div className={`absolute top-0 right-0 w-[350px] h-full flex flex-col border-l border-gray-200 bg-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
+          <div className="flex-1 overflow-y-auto space-y-4 relative">
+            {/* Title with view state */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-medium text-gray-800">{activeViewDetail}</h2>
+            </div>
+
+            <div className="px-4">
+              {/* Annotation Panel Component */}
+              <AnnotationPanel
+                indicators={indicators}
+                onIndicatorClick={onIndicatorClick}
+                onRemoveIndicator={handleRemoveIndicator}
+                onResetCurrentImage={handleResetCurrentImage}
+                damageTypeOptions={damageTypeOptions}
+                componentTypes={componentTypes}
+              />
+            </div>
+          </div>
+
+          {/* Fixed footer with buttons */}
+          <div className="flex-none p-3.5 border-t border-gray-200">
+            <button 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition"
+              onClick={handleFinish}
+              disabled={indicators.length === 0}
+            >
+              Finish [F]
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Enhanced Sidebar Right with tabs - Full height with fixed footer */}
-      <div className={`absolute top-0 right-0 w-[350px] h-full flex flex-col border-l border-gray-200 bg-white transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'translate-x-full' : 'translate-x-0'}`}>
-        <div className="flex-1 overflow-y-auto space-y-4 relative">
-          {/* Title with view state */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-800">{activeViewDetail}</h2>
-          </div>
-
-          <div className="px-4">
-            {/* Annotation Panel Component */}
-            <AnnotationPanel
-              indicators={indicators}
-              onIndicatorClick={onIndicatorClick}
-              onRemoveIndicator={handleRemoveIndicator}
-              onResetCurrentImage={handleResetCurrentImage}
-              damageTypeOptions={damageTypeOptions}
-              componentTypes={componentTypes}
-            />
-          </div>
-        </div>
-
-        {/* Fixed footer with buttons */}
-        <div className="flex-none p-3.5 border-t border-gray-200">
-          <button 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition"
-            onClick={handleFinish}
-            disabled={indicators.length === 0}
-          >
-            Finish [F]
-          </button>
-        </div>
-      </div>
-    </div>
+    </ConfigProvider>
   );
 };
 
