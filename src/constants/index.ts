@@ -2,6 +2,8 @@
 export * from './damageTypes';
 export * from './routes';
 export * from './ui';
+export * from './typography';
+export * from './validation';
 
 // App constants
 export const APP_NAME = 'Vehicle Damage Annotation';
