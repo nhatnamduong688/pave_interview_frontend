@@ -1,3 +1,8 @@
+/**
+ * Định nghĩa dữ liệu mẫu cho ứng dụng
+ * File được tạo mới hoàn toàn để tránh lỗi cú pháp
+ */
+
 export const initialData = {
   options: {
     componentOptions: [
@@ -81,19 +86,45 @@ export const initialData = {
   }
 };
 
-// Simple type exports 
+// Type definitions using explicit interfaces instead of typeof
 export type InitialDataType = typeof initialData;
 export type OptionsState = typeof initialData.options;
 export type JobState = typeof initialData.job;
 export type UIState = typeof initialData.ui;
 
-// Types for various entities
-export type ComponentOption = { code: string; label: string; keyHint: string };
-export type MaterialOption = { code: string; label: string; keyHint: string };
-export type DamageTypeOption = { code: string; label: string; keyHint: string };
-export type SeverityOption = { value: number; label: string };
-export type Photo = { id: string; jobId: string; viewName: string; url: string; sequence: number; annotations: Annotation[] };
-export type Annotation = {
+// Types for various entities with explicit definitions
+export interface ComponentOption {
+  code: string;
+  label: string;
+  keyHint: string;
+}
+
+export interface MaterialOption {
+  code: string;
+  label: string;
+  keyHint: string;
+}
+
+export interface DamageTypeOption {
+  code: string;
+  label: string;
+  keyHint: string;
+  color?: string;
+}
+
+export interface SeverityOption {
+  value: number;
+  label: string;
+}
+
+export interface Shape {
+  type: string;
+  x: number;
+  y: number;
+  radius: number;
+}
+
+export interface Annotation {
   id: string;
   photoId: string;
   components: string[];
@@ -102,17 +133,27 @@ export type Annotation = {
   score: number;
   throughPaint: boolean;
   color: string;
-  shape: { type: string; x: number; y: number; radius: number };
+  shape: Shape;
   status: string;
   createdBy: string;
   createdAt: string;
-};
-export type AnnotationInProgress = {
+}
+
+export interface Photo {
+  id: string;
+  jobId: string;
+  viewName: string;
+  url: string;
+  sequence: number;
+  annotations: Annotation[];
+}
+
+export interface AnnotationInProgress {
   photoId: null | string;
-  shape: null | { type: string; x: number; y: number; radius: number };
+  shape: null | Shape;
   components: string[];
   material: null | string;
   damageType: string[];
   severity: null | number;
   throughPaint: boolean;
-}; 
+} 

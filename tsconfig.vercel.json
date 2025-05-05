@@ -1,11 +1,25 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noImplicitAny": false,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "useUnknownInCatchVariables": false,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
     "strict": false,
-    "isolatedModules": false
-  }
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "alwaysStrict": false
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 } 
