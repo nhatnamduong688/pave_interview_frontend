@@ -44,7 +44,7 @@ const InteractiveImageViewer: React.FC<InteractiveImageViewerProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center"
+      className="relative w-full h-full flex items-center justify-center pr-4"
       style={{ cursor: isInteractionEnabled ? 'crosshair' : 'default' }}
       onClick={handleImageClick}
     >
@@ -52,7 +52,7 @@ const InteractiveImageViewer: React.FC<InteractiveImageViewerProps> = ({
       <img
         src={src}
         alt={alt}
-        className="max-w-full max-h-full object-contain"
+        className="max-w-full max-h-full object-contain rounded-xl"
         onLoad={() => setImageLoaded(true)}
       />
 
