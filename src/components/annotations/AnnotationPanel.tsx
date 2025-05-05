@@ -21,7 +21,7 @@ const AnnotationPanel: React.FC<AnnotationPanelProps> = ({
   componentTypes
 }) => {
   return (
-    <div className="border-t pt-4">
+    <div className="pt-4">
       <h3 className="text-lg font-medium text-gray-800 mb-4">Damage List</h3>
 
       {/* Show message when no annotations */}

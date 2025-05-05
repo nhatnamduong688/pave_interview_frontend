@@ -252,7 +252,10 @@ const VehicleDamageAnnotation: React.FC = () => {
           </div>
 
           {/* Main Viewer with annotation capability */}
-          <div className="flex-1 overflow-auto flex items-center justify-center py-2">
+          <div className="flex-1 overflow-auto flex flex-col items-center justify-center py-2">
+            {/* Tiêu đề view */}
+            <h2 className="text-2xl font-normal tracking-wide uppercase mb-4">{activeImage?.alt?.toUpperCase() || 'CURRENT VIEW'}</h2>
+            
             <InteractiveImageViewer
               src={activeImage?.src || ''}
               alt={activeImage?.alt}

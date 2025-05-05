@@ -299,7 +299,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
         {/* Fixed footer with buttons */}
         <div className="flex-none p-3.5 border-t border-gray-200">
           <button 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition mb-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition"
             onClick={indicators.length > 0 ? handleResetCurrentImage : undefined}
             disabled={indicators.length === 0}
           >

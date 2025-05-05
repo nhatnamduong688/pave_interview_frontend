@@ -79,7 +79,7 @@ const CustomAnnotationFooter: React.FC<CustomAnnotationFooterProps> = ({
   isAnnotationMode,
 }) => {
   return (
-    <div className="w-full bg-white border-t border-gray-200 py-3 px-4 relative">
+    <div className="w-full bg-white border-gray-200 py-3 px-4 relative">
       <div className="flex items-center justify-between">
         {/* Left: Legend Caption */}
         <div className="hidden md:block">
