@@ -20,7 +20,7 @@ const { Header, Content, Footer } = Layout;
 const { Option } = Select;
 const { Step } = Steps;
 
-// Thống kê giả lập
+// Mock statistics
 const statistics = {
   vehiclesInspected: 2463,
   annotationsCreated: 18452,
@@ -32,12 +32,12 @@ const statistics = {
   }
 };
 
-// Danh sách phương tiện gần đây (giả lập)
+// Recent vehicles list (mock data)
 const recentVehicles = [
-  { id: 'TQA-8GR5MDUDF1', name: 'FORD TRANSIT', date: '18/06/2023', status: 'completed' },
-  { id: 'TQA-9AC3MDTY67', name: 'TOYOTA CAMRY', date: '17/06/2023', status: 'in_progress' },
-  { id: 'TQA-7RS9HKUE12', name: 'HONDA CIVIC', date: '16/06/2023', status: 'completed' },
-  { id: 'TQA-5PL1KZAS89', name: 'MAZDA CX-5', date: '15/06/2023', status: 'completed' }
+  { id: 'TQA-8GR5MDUDF1', name: 'FORD TRANSIT', date: '06/18/2023', status: 'completed' },
+  { id: 'TQA-9AC3MDTY67', name: 'TOYOTA CAMRY', date: '06/17/2023', status: 'in_progress' },
+  { id: 'TQA-7RS9HKUE12', name: 'HONDA CIVIC', date: '06/16/2023', status: 'completed' },
+  { id: 'TQA-5PL1KZAS89', name: 'MAZDA CX-5', date: '06/15/2023', status: 'completed' }
 ];
 
 const VehicleThemeSelectionPage: React.FC = () => {
@@ -47,19 +47,19 @@ const VehicleThemeSelectionPage: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<string>('TQA-8GR5MDUDF1');
   const [current, setCurrent] = useState(0);
 
-  // Cấu hình theme
+  // Theme configuration
   const themeConfigs = {
     light: {
       name: 'Light Mode',
       color: '#ffffff',
       textColor: '#000000',
-      description: 'Giao diện sáng với nền trắng, dễ nhìn và tương phản tốt.'
+      description: 'Bright interface with white background, easy to read with good contrast.'
     },
     gray: {
       name: 'Gray Mode',
       color: '#f0f2f5',
       textColor: '#000000',
-      description: 'Giao diện xám nhẹ nhàng, giảm mỏi mắt khi làm việc lâu.'
+      description: 'Gentle gray interface, reduces eye strain during extended sessions.'
     }
   };
 
@@ -68,10 +68,10 @@ const VehicleThemeSelectionPage: React.FC = () => {
   };
 
   const handleStartAnnotation = () => {
-    // Lưu theme vào Redux store
+    // Save theme to Redux store
     dispatch(setTheme(selectedTheme));
     
-    // Chuyển hướng đến trang chú thích xe
+    // Navigate to the annotation page
     navigate(`/vehicle-damage-annotation-v2/${selectedVehicle}`);
   };
 
@@ -89,11 +89,11 @@ const VehicleThemeSelectionPage: React.FC = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'Hoàn thành';
+        return 'Completed';
       case 'in_progress':
-        return 'Đang xử lý';
+        return 'In Progress';
       default:
-        return 'Chưa xử lý';
+        return 'Not Started';
     }
   };
 
@@ -106,20 +106,20 @@ const VehicleThemeSelectionPage: React.FC = () => {
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 16 }}>
           <Button type="text" icon={<DashboardOutlined />}>Dashboard</Button>
-          <Button type="text" icon={<SettingOutlined />}>Cài đặt</Button>
-          <Button type="text" icon={<UserOutlined />}>Tài khoản</Button>
+          <Button type="text" icon={<SettingOutlined />}>Settings</Button>
+          <Button type="text" icon={<UserOutlined />}>Account</Button>
         </div>
       </Header>
       
       <Content style={{ padding: '24px' }}>
         <Row gutter={[24, 24]} justify="center">
-          {/* Cột bên trái */}
+          {/* Left column */}
           <Col xs={24} lg={16} xl={18}>
             <Card 
               title={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <DashboardOutlined style={{ marginRight: 8 }} />
-                  <span>Bảng điều khiển</span>
+                  <span>Dashboard</span>
                 </div>
               }
               style={{ marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
@@ -127,7 +127,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
               <Row gutter={[24, 24]}>
                 <Col xs={24} sm={12} md={6}>
                   <Statistic 
-                    title="Phương tiện đã kiểm tra"
+                    title="Vehicles Inspected"
                     value={statistics.vehiclesInspected}
                     prefix={<CarOutlined />}
                     valueStyle={{ color: '#1890ff' }}
@@ -135,7 +135,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 </Col>
                 <Col xs={24} sm={12} md={6}>
                   <Statistic 
-                    title="Chú thích đã tạo"
+                    title="Annotations Created"
                     value={statistics.annotationsCreated}
                     prefix={<FileTextOutlined />}
                     valueStyle={{ color: '#52c41a' }}
@@ -143,7 +143,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 </Col>
                 <Col xs={24} sm={12} md={6}>
                   <Statistic 
-                    title="Người dùng hoạt động"
+                    title="Active Users"
                     value={statistics.activeUsers}
                     prefix={<UserOutlined />}
                     valueStyle={{ color: '#722ed1' }}
@@ -151,7 +151,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 </Col>
                 <Col xs={24} sm={12} md={6}>
                   <Statistic 
-                    title="Tỷ lệ hoàn thành"
+                    title="Completion Rate"
                     value={statistics.completionRate}
                     suffix="%"
                     prefix={<CheckCircleOutlined />}
@@ -165,24 +165,24 @@ const VehicleThemeSelectionPage: React.FC = () => {
               title={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <CarryOutOutlined style={{ marginRight: 8 }} />
-                  <span>Quy trình đánh giá hư hỏng xe</span>
+                  <span>Vehicle Damage Assessment Workflow</span>
                 </div>
               }
               style={{ marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
             >
               <Steps current={current} onChange={setCurrent}>
-                <Step title="Chọn xe" description="Xác định phương tiện cần đánh giá" />
-                <Step title="Chú thích" description="Đánh dấu các điểm hư hỏng" />
-                <Step title="Kiểm tra" description="Xem lại các chú thích" />
-                <Step title="Xuất báo cáo" description="Tạo báo cáo đánh giá" />
+                <Step title="Select Vehicle" description="Identify the vehicle to assess" />
+                <Step title="Annotate" description="Mark damage points" />
+                <Step title="Review" description="Verify all annotations" />
+                <Step title="Export Report" description="Generate assessment report" />
               </Steps>
 
               <div style={{ marginTop: 24, padding: 24, backgroundColor: '#fafafa', borderRadius: 8 }}>
                 {current === 0 && (
                   <div>
-                    <Title level={5}>Hướng dẫn chọn xe</Title>
+                    <Title level={5}>Vehicle Selection Guide</Title>
                     <Paragraph>
-                      Chọn phương tiện từ danh sách hoặc nhập mã phương tiện. Đảm bảo bạn chọn đúng kiểu và mẫu xe để có thể đánh giá chính xác nhất.
+                      Choose a vehicle from the list or enter a vehicle ID. Make sure you select the correct make and model for the most accurate assessment.
                     </Paragraph>
                     <div style={{ marginTop: 16 }}>
                       <img 
@@ -203,9 +203,9 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 )}
                 {current === 1 && (
                   <div>
-                    <Title level={5}>Hướng dẫn chú thích</Title>
+                    <Title level={5}>Annotation Guide</Title>
                     <Paragraph>
-                      Sử dụng công cụ chú thích để đánh dấu vị trí hư hỏng trên xe. Chọn loại hư hỏng, mức độ nghiêm trọng và bộ phận bị ảnh hưởng.
+                      Use the annotation tools to mark damage locations on the vehicle. Select the damage type, severity level, and affected components.
                     </Paragraph>
                     <div style={{ marginTop: 16 }}>
                       <img 
@@ -226,9 +226,9 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 )}
                 {current === 2 && (
                   <div>
-                    <Title level={5}>Hướng dẫn kiểm tra</Title>
+                    <Title level={5}>Review Guide</Title>
                     <Paragraph>
-                      Xem lại tất cả các chú thích đã tạo. Đảm bảo tất cả các hư hỏng đều được ghi lại chính xác trước khi xuất báo cáo.
+                      Review all created annotations. Ensure all damages are accurately recorded before generating the report.
                     </Paragraph>
                     <div style={{ marginTop: 16 }}>
                       <img 
@@ -249,9 +249,9 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 )}
                 {current === 3 && (
                   <div>
-                    <Title level={5}>Hướng dẫn xuất báo cáo</Title>
+                    <Title level={5}>Report Export Guide</Title>
                     <Paragraph>
-                      Chọn định dạng báo cáo (PDF hoặc JSON) và xuất báo cáo đánh giá chi tiết về các hư hỏng của phương tiện.
+                      Choose the report format (PDF or JSON) and export a detailed assessment report of the vehicle damages.
                     </Paragraph>
                     <div style={{ marginTop: 16 }}>
                       <img 
@@ -277,7 +277,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
               title={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <FileSearchOutlined style={{ marginRight: 8 }} />
-                  <span>Phương tiện gần đây</span>
+                  <span>Recent Vehicles</span>
                 </div>
               }
               style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
@@ -296,7 +296,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                           navigate(`/vehicle-damage-annotation-v2/${item.id}`);
                         }}
                       >
-                        Tiếp tục
+                        Continue
                       </Button>
                     ]}
                   >
@@ -312,7 +312,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                           />
                         </div>
                       }
-                      description={<>ID: {item.id} | Ngày tạo: {item.date}</>}
+                      description={<>ID: {item.id} | Created: {item.date}</>}
                     />
                   </List.Item>
                 )}
@@ -320,22 +320,22 @@ const VehicleThemeSelectionPage: React.FC = () => {
             </Card>
           </Col>
 
-          {/* Cột bên phải */}
+          {/* Right column */}
           <Col xs={24} lg={8} xl={6}>
             <Card
               title={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <PictureOutlined style={{ marginRight: 8 }} />
-                  <span>Bắt đầu mới</span>
+                  <span>Start New Session</span>
                 </div>
               }
               style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: 24 }}
             >
               <Form layout="vertical">
                 <Form.Item 
-                  label="Chọn phương tiện" 
+                  label="Select Vehicle" 
                   required
-                  tooltip="ID phương tiện cần đánh giá hư hỏng"
+                  tooltip="Vehicle ID to assess for damage"
                 >
                   <Select 
                     value={selectedVehicle}
@@ -354,8 +354,8 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 <Form.Item 
                   label={
                     <span>
-                      Giao diện hiển thị
-                      <Tooltip title="Lựa chọn giao diện phù hợp với điều kiện ánh sáng và sở thích">
+                      Interface Theme
+                      <Tooltip title="Choose a theme that suits your lighting conditions and preferences">
                         <InfoCircleOutlined style={{ marginLeft: 4 }} />
                       </Tooltip>
                     </span>
@@ -409,7 +409,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                     onClick={handleStartAnnotation}
                     icon={<RightOutlined />}
                   >
-                    Bắt đầu chú thích
+                    Start Annotation
                   </Button>
                 </Form.Item>
               </Form>
@@ -419,22 +419,22 @@ const VehicleThemeSelectionPage: React.FC = () => {
               title={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <InfoCircleOutlined style={{ marginRight: 8 }} />
-                  <span>Thông tin</span>
+                  <span>Information</span>
                 </div>
               }
               style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
             >
               <Paragraph>
-                <strong>Hệ thống chú thích hư hỏng phương tiện v1.0</strong>
+                <strong>Vehicle Damage Annotation System v1.0</strong>
               </Paragraph>
               <Paragraph type="secondary">
-                Hệ thống cho phép đánh giá và ghi lại các hư hỏng trên phương tiện một cách chính xác và đầy đủ.
+                The system allows accurate and comprehensive evaluation and documentation of vehicle damages.
               </Paragraph>
               <Divider />
               <Row gutter={[8, 8]}>
                 <Col span={12}>
                   <Statistic 
-                    title="Người dùng chọn Light"
+                    title="Users Prefer Light"
                     value={statistics.themeUsage.light}
                     suffix="%"
                     valueStyle={{ color: '#1890ff', fontSize: '18px' }}
@@ -442,7 +442,7 @@ const VehicleThemeSelectionPage: React.FC = () => {
                 </Col>
                 <Col span={12}>
                   <Statistic 
-                    title="Người dùng chọn Gray"
+                    title="Users Prefer Gray"
                     value={statistics.themeUsage.gray}
                     suffix="%"
                     valueStyle={{ color: '#595959', fontSize: '18px' }}

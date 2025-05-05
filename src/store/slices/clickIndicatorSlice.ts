@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
-// Interface cho indicator
+// Interface for indicator
 export interface Indicator {
   id: string;
   x: number;
@@ -16,7 +16,7 @@ export interface Indicator {
   throughPaint?: boolean;
 }
 
-// Interface cho state với indicators được lưu theo imageId
+// Interface for state with indicators stored by imageId
 interface ClickIndicatorState {
   // Map imageId to array of indicators
   indicatorsByImage: Record<string, Indicator[]>;
@@ -26,7 +26,7 @@ interface ClickIndicatorState {
   activeImageId: string | null;
 }
 
-// Color palette cho indicators
+// Color palette for indicators
 const colorPalette = [
   '#ef4444', // red
   '#f97316', // orange
@@ -40,7 +40,7 @@ const colorPalette = [
   '#ec4899', // pink
 ];
 
-// Helper để lấy một màu ngẫu nhiên từ palette
+// Helper to get a random color from palette
 const getRandomColor = () => {
   const randomIndex = Math.floor(Math.random() * colorPalette.length);
   return colorPalette[randomIndex];
@@ -53,12 +53,12 @@ const initialState: ClickIndicatorState = {
   activeImageId: null,
 };
 
-// Tạo slice
+// Create slice
 const clickIndicatorSlice = createSlice({
   name: 'clickIndicator',
   initialState,
   reducers: {
-    // Thiết lập ảnh đang active
+    // Set active image
     setActiveImage: (state, action: PayloadAction<string>) => {
       state.activeImageId = action.payload;
       // Ensure that the image has an entry in the indicators map
@@ -75,7 +75,7 @@ const clickIndicatorSlice = createSlice({
       });
     },
     
-    // Thêm indicator mới từ click vào ảnh
+    // Add new indicator from click on image
     addIndicator: (state, action: PayloadAction<{
       imageId: string;
       x: number;
@@ -112,18 +112,18 @@ const clickIndicatorSlice = createSlice({
       state.indicatorsByImage[imageId].push(newIndicator);
     },
     
-    // Chọn một indicator
+    // Select an indicator
     selectIndicator: (state, action: PayloadAction<{ imageId: string; indicatorId: string }>) => {
       const { imageId, indicatorId } = action.payload;
       
       if (!state.indicatorsByImage[imageId]) return;
       
-      // Reset tất cả indicators của ảnh đó
+      // Reset all indicators for that image
       state.indicatorsByImage[imageId].forEach(indicator => {
         indicator.isHighlighted = false;
       });
       
-      // Highlight indicator được chọn
+      // Highlight selected indicator
       const indicator = state.indicatorsByImage[imageId].find(ind => ind.id === indicatorId);
       if (indicator) {
         indicator.isHighlighted = true;
@@ -131,7 +131,7 @@ const clickIndicatorSlice = createSlice({
       }
     },
     
-    // Bỏ chọn indicator
+    // Deselect indicator
     clearSelection: (state) => {
       const activeImageId = state.activeImageId;
       if (!activeImageId || !state.indicatorsByImage[activeImageId]) return;
@@ -142,7 +142,7 @@ const clickIndicatorSlice = createSlice({
       state.selectedIndicatorId = null;
     },
     
-    // Xóa indicator
+    // Remove indicator
     removeIndicator: (state, action: PayloadAction<{ imageId: string; indicatorId: string }>) => {
       const { imageId, indicatorId } = action.payload;
       
@@ -157,7 +157,7 @@ const clickIndicatorSlice = createSlice({
       }
     },
     
-    // Reset indicators cho ảnh hiện tại
+    // Reset indicators for current image
     resetImageIndicators: (state, action: PayloadAction<string>) => {
       const imageId = action.payload;
       state.indicatorsByImage[imageId] = [];
@@ -166,13 +166,13 @@ const clickIndicatorSlice = createSlice({
       }
     },
     
-    // Reset tất cả indicators
+    // Reset all indicators
     resetAllIndicators: (state) => {
       state.indicatorsByImage = {};
       state.selectedIndicatorId = null;
     },
     
-    // Cập nhật indicator đã tồn tại
+    // Update existing indicator
     updateIndicator: (state, action: PayloadAction<{ 
       imageId: string; 
       indicatorId: string; 
@@ -191,7 +191,7 @@ const clickIndicatorSlice = createSlice({
   },
 });
 
-// Export actions và reducer
+// Export actions and reducer
 export const {
   setActiveImage,
   addIndicator,
