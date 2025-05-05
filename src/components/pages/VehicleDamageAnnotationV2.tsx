@@ -194,7 +194,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
       {/* Main content area (left part) */}
       <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'mr-0' : 'mr-[350px]'}`}>
         {/* Header */}
-        <div className="flex-none h-16 px-4 border-b border-gray-200 bg-white z-10">
+        <div className="flex-none h-16 bg-white z-10">
           <Header
             title=""
             sessionId={sessionId}
@@ -263,8 +263,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
           </div>
         </div>
 
-        {/* Footer with annotation controls */}
-        <div className="flex-none border-t border-gray-200">
+        <div className="flex-none">
           <CustomAnnotationFooter
             captionText={captionText}
             extraThumbnails={extraThumbnails}
@@ -282,14 +281,6 @@ const VehicleDamageAnnotationV2: React.FC = () => {
           {/* Title with view state */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <h2 className="text-lg font-medium text-gray-800">{activeViewDetail}</h2>
-            <div className="flex items-center">
-              <button className="p-1" onClick={handleCollapseToggle}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <line x1="9" y1="3" x2="9" y2="21" />
-                </svg>
-              </button>
-            </div>
           </div>
 
           <div className="px-4">
@@ -306,7 +297,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
         </div>
 
         {/* Fixed footer with buttons */}
-        <div className="flex-none p-4 border-t border-gray-200">
+        <div className="flex-none p-3.5 border-t border-gray-200">
           <button 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition mb-2"
             onClick={indicators.length > 0 ? handleResetCurrentImage : undefined}

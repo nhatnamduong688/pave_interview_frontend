@@ -40,7 +40,8 @@ const Header: React.FC<HeaderProps> = ({
       {/* Left side - Back button and SessionCard */}
       <div className="flex items-center">
         <BackButton
-          variant="secondary"
+          variant="default"
+          fillColor="white"
           onClick={onBack || onMenuClick || (() => console.log('Back button clicked'))}
           className="mr-4"
         />

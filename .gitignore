@@ -48,3 +48,4 @@ component-spec-request.md
 # Local notes file
 DEVELOPMENT_NOTES.md
 .yarn/install-state.gz
+.vercel
