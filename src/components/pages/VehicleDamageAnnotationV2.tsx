@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../organisms/Header';
 import ThumbnailList from '../molecules/ThumbnailList';
 import CustomAnnotationFooter from '../molecules/CustomAnnotationFooter';
@@ -69,6 +69,7 @@ const mockVehicleData = {
 
 const VehicleDamageAnnotationV2: React.FC = () => {
   const { id: vehicleIdFromUrl } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const vehicleId = vehicleIdFromUrl || mockVehicleData.vehicleId;
   
   // Vehicle data hook
@@ -189,6 +190,17 @@ const VehicleDamageAnnotationV2: React.FC = () => {
   // Lấy chi tiết view active
   const activeViewDetail = getActiveViewDetail(activeImage?.id);
   
+  // Hàm xử lý khi nhấn nút Finish
+  const handleFinish = () => {
+    if (indicators.length > 0) {
+      // Thực hiện các thao tác cần thiết khi hoàn thành
+      handleResetCurrentImage();
+      
+      // Chuyển hướng đến trang hoàn thành
+      navigate(`/vehicle-damage-complete/${vehicleId}`);
+    }
+  };
+  
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Main content area (left part) */}
@@ -300,7 +312,7 @@ const VehicleDamageAnnotationV2: React.FC = () => {
         <div className="flex-none p-3.5 border-t border-gray-200">
           <button 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium transition"
-            onClick={indicators.length > 0 ? handleResetCurrentImage : undefined}
+            onClick={handleFinish}
             disabled={indicators.length === 0}
           >
             Finish [F]
