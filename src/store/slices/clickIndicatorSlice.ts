@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
+import { COLOR_PALETTE } from '../../constants';
 
 // Interface for indicator
 export interface Indicator {
@@ -26,24 +27,10 @@ interface ClickIndicatorState {
   activeImageId: string | null;
 }
 
-// Color palette for indicators
-const colorPalette = [
-  '#ef4444', // red
-  '#f97316', // orange
-  '#f59e0b', // amber
-  '#84cc16', // lime
-  '#10b981', // emerald
-  '#06b6d4', // cyan
-  '#3b82f6', // blue
-  '#8b5cf6', // violet
-  '#d946ef', // fuchsia
-  '#ec4899', // pink
-];
-
 // Helper to get a random color from palette
 const getRandomColor = () => {
-  const randomIndex = Math.floor(Math.random() * colorPalette.length);
-  return colorPalette[randomIndex];
+  const randomIndex = Math.floor(Math.random() * COLOR_PALETTE.length);
+  return COLOR_PALETTE[randomIndex];
 };
 
 // Initial state
